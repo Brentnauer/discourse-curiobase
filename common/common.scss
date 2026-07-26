@@ -116,31 +116,6 @@ body.curio-wing, body.vault-wing {
   a { color: $ink; text-decoration: none; &:hover { color: $curio; } }
 }
 
-// ── work rows ──
-.d-wrap[data-wrap="curio-work"] {
-  border-left: 3px solid $curio;
-  padding-left: 1em;
-  margin: 0.4em 0 1em;
-
-  .curio-workhead {
-    display: flex;
-    align-items: baseline;
-    gap: 1em;
-    flex-wrap: wrap;
-    padding: 0.35em 0 0.5em;
-    border-bottom: 1px solid color-mix(in srgb, $curio 20%, transparent);
-    margin-bottom: 0.7em;
-
-    .cw-title {
-      font-family: Georgia, serif;
-      font-size: 1.15em;
-      font-weight: 700;
-      color: $ink;
-      text-decoration: none;
-      &:hover { color: $curio; }
-    }
-  }
-}
 
 // ── vault card ──
 .d-wrap[data-wrap="curio-card"] {
