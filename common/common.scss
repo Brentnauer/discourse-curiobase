@@ -892,6 +892,67 @@ body.vault-entry, body.curio-entry {
 }
 .d-wrap[data-wrap="curio-concept"].curio-hero .curio-masthead .cm-related { margin-right: 1.1em; }
 
+// ── the ballot AFTER you have voted ──
+//
+// All the ballot styling above dresses the *unvoted* state, which is the state I kept
+// checking it in. Once you vote, Discourse swaps in a different subtree entirely --
+// a sentence ("Average rating: 5.") and a full-size button row -- and none of the
+// selectors above touch it. Two axes of that is ~210px of default chrome restating a
+// number the position row already shows twice.
+//
+// Test both states. A component that looks right until someone uses it is not styled.
+.curio-ballot .poll:has(.discourse-poll-number-results) {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.8em;
+  margin: 4px 0 0 !important;
+
+  .poll-container { padding: 0 !important; margin: 0 !important; }
+
+  .discourse-poll-number-results {
+    // the wording lives in text nodes around the <strong>; collapse it and let the
+    // axis label above carry the meaning
+    span { font-size: 0; }
+    strong {
+      font: 700 1.6rem/1 ui-monospace, monospace;
+      color: #2aa79b;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  .poll-info {
+    text-align: left;
+    padding: 0 !important;
+    .info-number { font-size: 0.95rem !important; color: var(--primary-medium, #9aa0a6); }
+    .info-label { font-size: 0.62rem !important; letter-spacing: 0.1em; text-transform: uppercase; }
+  }
+
+  // "Vote" here means "go back and change my answer" — a quiet link, not a CTA
+  .poll-buttons {
+    margin: 0;
+    opacity: 1;
+    transform: none;
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+    .toggle-results {
+      background: transparent !important;
+      border: 0 !important;
+      padding: 0.2em 0.4em !important;
+      color: var(--primary-medium, #9aa0a6) !important;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      &:hover { color: #2aa79b !important; }
+      svg, .d-icon { display: none !important; }
+    }
+    // the gear opens poll admin — staff-only noise on a reader's screen
+    .poll-buttons-dropdown { opacity: 0.28; transform: scale(0.8); }
+  }
+}
+.cb-calib .poll:has(.discourse-poll-number-results) .discourse-poll-number-results strong { color: #c9a227; }
+
 // ═══ v4: Position Rows ═══
 #curio-positions { margin: 1.4em 0 0; }
 
@@ -1515,43 +1576,94 @@ ul.entry-connected {
 /* ── CARD: works. Poster-led, the way every media database is. ──
    The two columns live INSIDE the masthead. Building them from siblings of the wrap
    meant the layout depended on what other renderers prepended, which put the title
-   and dek in the 132px poster column. */
+   and dek in the 132px poster column.
+
+   ⚠ THIS IS THE FIFTH TIME A WRAP RENAME SILENTLY DELETED A DESIGN.
+
+   The original work hero — 210px poster, the poster itself blurred behind the panel,
+   serif title on a dark field — was written against `.d-wrap[data-wrap="curio-card"]
+   .vault-hero`. Renaming the wrap to `tti` did not break it loudly; it just stopped
+   matching, and what remained was a thin bordered box with a 116px thumbnail. The JS
+   still set `--vh-bg` on every card. Nothing read it for a week.
+
+   The rule, restated: a renamed wrap needs its STYLES re-pointed, not just its
+   selectors. A stylesheet cannot fail — it can only not apply. */
 .d-wrap[data-wrap="tti"].record-card {
-  /* A card needs an edge. Without a background the poster, title and metadata read as
-     three loose elements, and the dead space beside the poster's lower half reads as a
-     gap rather than as padding. */
-  background: color-mix(in srgb, #{$vaultg} 5%, transparent);
-  border: 1px solid color-mix(in srgb, #{$vaultg} 22%, transparent);
-  border-radius: 6px;
-  padding: 1.1em 1.2em;
-  margin-bottom: 1.1em;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 0;
+  border-radius: 12px;
+  padding: 1.6em;
+  margin-bottom: 1.2em;
+  background: #0b1013;
+
+  /* the poster IS the identity of the record — so it is also the atmosphere.
+     Set from the record's own image by the vault card renderer. */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: var(--vh-bg);
+    background-size: cover;
+    background-position: center 25%;
+    filter: blur(34px) brightness(0.32) saturate(1.1);
+    transform: scale(1.2);
+  }
 
   .entry-masthead.rc-split {
     display: grid;
-    grid-template-columns: 116px minmax(0, 1fr);
-    gap: 1.3em;
+    grid-template-columns: 210px minmax(0, 1fr);
+    gap: 1.5em;
     align-items: start;
+    margin-bottom: 0;
   }
 
   .rc-poster {
     p { margin: 0; }
+    /* Discourse wraps images it considers large in a lightbox anchor; both paths
+       must be sized or the poster renders at its natural width and blows the grid. */
+    .lightbox-wrapper, a.lightbox { display: block; margin: 0; }
+    .meta, .informations, .filename { display: none !important; }
     img {
-      width: 100%;
-      border-radius: 4px;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: auto !important;
+      margin: 0 !important;
+      float: none !important;
       display: block;
-      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+      border-radius: 8px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
     }
   }
 
   .rc-head { min-width: 0; }
-  .entry-title { margin-top: 0.15em; }
-  .entry-dek { margin-top: 0.35em; }
+
+  .entry-type { background: rgba(255, 255, 255, 0.82); color: #0b1013; }
+
+  .entry-title {
+    margin: 0.34em 0 0;
+    font: 700 1.95em/1.14 Georgia, "Times New Roman", serif;
+    color: #fff;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  }
+
+  .entry-dek {
+    margin-top: 0.5em;
+    color: #cdd4da;
+    font-size: 1.02em;
+    line-height: 1.5;
+    max-width: 42em;
+  }
 
   /* metadata as one inline row — five facts don't need five rows */
   .rc-meta {
-    margin-top: 0.8em;
-    font-size: 0.9em;
-    color: var(--primary-medium, #9aa0a6);
+    margin-top: 1em;
+    padding-top: 0.85em;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    font-size: 0.86em;
+    color: #a7b1b9;
     line-height: 1.7;
   }
   .rc-fact {
@@ -1563,20 +1675,14 @@ ul.entry-connected {
     &:last-child::after { content: ""; }
     a { color: inherit; border-bottom: 1px solid color-mix(in srgb, currentColor 35%, transparent); }
   }
-}
 
-
-/* the gravity index belongs to the card it describes */
-.record-card + .curio-cardhead,
-.d-wrap[data-wrap="tti"].record-card ~ .curio-cardhead { margin-top: 0.2em; }
-
-.vault-entry .curio-cardhead {
-  margin-bottom: 0.55em;
-  .gp-zone { margin-top: 0; }
+  /* record.js empties this when it consumes the authored fact table; an empty block
+     still occupies a margin. */
+  > .md-table:empty { display: none; }
 }
 
 /* the trailer and body prose sit closer to the card than a full paragraph gap */
-.d-wrap[data-wrap="tti"].record-card + p { margin-top: 0.9em; }
+.d-wrap[data-wrap="tti"].record-card + p { margin-top: 1em; }
 
 /* ── INDEX: concepts. Definition and what's filed here; no fact table. ── */
 .d-wrap[data-wrap="tti"].record-index {

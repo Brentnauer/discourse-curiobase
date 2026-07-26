@@ -655,8 +655,15 @@ export default apiInitializer("1.0", (api) => {
       el.querySelectorAll('.d-wrap[data-wrap="tti"][data-type="work"], .d-wrap[data-wrap="curio-card"]').forEach((w) => {
         if (w.querySelector(".curio-cardhead")) return;
         // On a unified record the header (badge, title, dek, fact strip) is already
-        // drawn by record.js from the markdown table. Only the hero treatment and the
-        // gravity plaques are still wanted here.
+        // drawn by record.js from the markdown table. Only the hero treatment is still
+        // wanted here.
+        //
+        // The gravity plaques used to be prepended too, which is why the page opened
+        // with a band of scores ABOVE the poster and title. They carried the same mini
+        // grid, the same concept name and the same two numbers as the position rows
+        // eighty pixels further down -- the third statement of one fact on one page.
+        // The position row wins: it also has the concept's definition, the reader's own
+        // score, and the actions. So on a unified record the plaques are not built.
         const unified = w.dataset.wrap === "tti";
         const head = document.createElement("div");
         head.className = "curio-cardhead";
@@ -685,7 +692,7 @@ export default apiInitializer("1.0", (api) => {
           a.textContent = k.toUpperCase() + " ↗";
           meta.append(a);
         });
-        head.append(meta);
+        if (meta.children.length) head.append(meta);
         // hero conversion on entry pages
         try {
           const tc0 = api.container.lookup("controller:topic");
@@ -703,10 +710,11 @@ export default apiInitializer("1.0", (api) => {
             if (img) w.style.setProperty("--vh-bg", `url(${img.getAttribute("src")})`);
           }
         } catch {}
-        // gravity plaques: the relationship's visual identity, right on the hero
+        // gravity plaques: the relationship's visual identity, right on the hero.
+        // Superseded by the position rows on unified records -- see the note above.
         try {
           const tc = api.container.lookup("controller:topic");
-          const posts = tc?.model?.postStream?.posts || [];
+          const posts = unified ? [] : (tc?.model?.postStream?.posts || []);
           const row = document.createElement("div");
           row.className = "gravity-plaques";
           let found = 0;
@@ -746,7 +754,10 @@ export default apiInitializer("1.0", (api) => {
             head.append(wrap2);
           }
         } catch {}
-        w.prepend(head);
+        // On a unified record everything above is a no-op, so this would prepend an
+        // empty div ahead of the masthead -- which still collapses a margin and still
+        // shifts the grid. Only mount a head that has something in it.
+        if (head.querySelector("*") || head.textContent.trim()) w.prepend(head);
       });
 
 
