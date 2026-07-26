@@ -24,9 +24,12 @@ import {
   buildGallery,
 } from "../lib/scoring";
 
+import { renderEntry, resetEntryBodyClasses } from "../lib/entries";
+
 export default apiInitializer("1.0", (api) => {
   api.onPageChange(() => {
     const b = document.body;
+    resetEntryBodyClasses();
     ["curio-wing", "vault-wing", "vault-entry", "curio-entry"].forEach((c) => b.classList.remove(c));
     document.getElementById("curio-wingnav")?.remove();
     const cat = currentCategory(api);
@@ -479,6 +482,15 @@ export default apiInitializer("1.0", (api) => {
       const post = helper?.getModel?.();
       if (el.querySelector('.d-wrap[data-wrap="curio-gravity"]')) {
         el.closest(".topic-post")?.classList.add("curio-edge-post");
+      }
+
+      // ── entry system: event / person / place / object / org / claim ──
+      try {
+        renderEntry(el, post, api);
+      } catch (e) {
+        // never let an entry failure take down the scoring surfaces below
+        // eslint-disable-next-line no-console
+        console.warn("[curiobase] entry render failed", e);
       }
 
       // ── concept entry: masthead + self-populating gallery + grid ──

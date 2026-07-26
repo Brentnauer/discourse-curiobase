@@ -1205,3 +1205,195 @@ body.vault-entry .post-stream .topic-post.pr-flash:has(.d-wrap[data-wrap="curio-
 .csp-head b { color: var(--primary, #e8e6e3); font-weight: 700; letter-spacing: 0.06em; }
 .csp-head .csp-x { opacity: 0.6; margin: 0 0.15em; }
 #curio-atlas .ca-meta.ca-empty-meta { font-style: italic; opacity: 0.75; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THE ENTRY SYSTEM
+   event · person · place · object · org · claim
+
+   Progressive enhancement: the fact strip is authored as a markdown table and
+   renders as a real <table> without JS. These rules style the <dl> the
+   component swaps in. If the JS never loads the reader still sees the facts.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+$entry: #7f8fa6;
+
+.d-wrap[data-wrap="entry"] {
+  margin: 0 0 1.4em;
+
+  .entry-masthead {
+    margin-bottom: 0.9em;
+  }
+
+  .entry-type {
+    display: inline-block;
+    font-size: 0.68em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    padding: 0.22em 0.62em;
+    border-radius: 2px;
+    color: #0d0f11;
+    background: $entry;
+    vertical-align: middle;
+  }
+
+  /* one accent per type — the badge is the only place colour carries meaning */
+  .et-event  { background: #c9a227; }
+  .et-person { background: #8fb08a; }
+  .et-place  { background: #7fa8c9; }
+  .et-object { background: #b98f6d; }
+  .et-org    { background: #a48fb0; }
+  .et-claim  { background: #c98f8f; }
+  .et-concept { background: #2aa79b; }
+  .et-work   { background: #9aa0a6; }
+
+  .entry-title {
+    margin: 0.34em 0 0.1em;
+    font-size: 1.72em;
+    line-height: 1.16;
+    color: var(--primary, #e8e6e3);
+  }
+
+  .entry-dek {
+    margin: 0.2em 0 0;
+    color: var(--primary-medium, #9aa0a6);
+    font-size: 1.02em;
+    line-height: 1.45;
+    max-width: 46em;
+  }
+
+  /* ── the fact strip ── */
+  .entry-facts {
+    display: grid;
+    grid-template-columns: minmax(6.5em, max-content) 1fr;
+    gap: 0.1em 1.1em;
+    margin: 1.1em 0 0;
+    padding: 0.85em 1em;
+    border-left: 3px solid $entry;
+    background: color-mix(in srgb, #{$entry} 7%, transparent);
+    font-size: 0.95em;
+
+    dt {
+      color: var(--primary-medium, #9aa0a6);
+      font-size: 0.82em;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.3em 0;
+      align-self: baseline;
+    }
+
+    dd {
+      margin: 0;
+      padding: 0.3em 0;
+      color: var(--primary, #e8e6e3);
+      a { border-bottom: 1px solid color-mix(in srgb, #{$entry} 45%, transparent); }
+    }
+  }
+
+  .entry-reviewed {
+    margin-top: 0.7em;
+    font-size: 0.8em;
+    color: var(--primary-medium, #9aa0a6);
+    font-style: italic;
+  }
+}
+
+/* ── the needs list: the checklist plugin owns the boxes ── */
+.d-wrap[data-wrap="entry-needs"] {
+  margin: 1.6em 0;
+  padding: 0.9em 1.1em 1em;
+  border: 1px dashed color-mix(in srgb, #{$entry} 42%, transparent);
+  border-radius: 3px;
+  background: color-mix(in srgb, #{$entry} 5%, transparent);
+
+  .entry-needs-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7em;
+    margin-bottom: 0.45em;
+  }
+
+  .en-title {
+    font-size: 0.76em;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    color: $entry;
+  }
+
+  .en-count {
+    font-size: 0.76em;
+    color: var(--primary-medium, #9aa0a6);
+    font-variant-numeric: tabular-nums;
+  }
+
+  ul { margin: 0; padding-left: 1.1em; }
+
+  li {
+    margin: 0.18em 0;
+    line-height: 1.5;
+  }
+
+  .en-hint {
+    margin-top: 0.7em;
+    font-size: 0.84em;
+    color: var(--primary-medium, #9aa0a6);
+  }
+
+  /* everything answered */
+  &.entry-needs-done {
+    border-style: solid;
+    border-color: color-mix(in srgb, #2aa79b 35%, transparent);
+    .en-title { color: #2aa79b; }
+  }
+}
+
+/* ── connected: the graph, authored as a list ── */
+.entry-sectlabel {
+  font-size: 0.78em !important;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--primary-medium, #9aa0a6);
+  border-bottom: 1px solid color-mix(in srgb, #{$entry} 22%, transparent);
+  padding-bottom: 0.35em;
+  margin: 1.8em 0 0.7em !important;
+}
+
+ul.entry-connected {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    margin: 0.34em 0;
+    line-height: 1.5;
+  }
+
+  .ec-kind {
+    display: inline-block;
+    min-width: 6.4em;
+    font-size: 0.74em;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--primary-medium, #9aa0a6);
+  }
+}
+
+/* ── the post-event card sits above the fact strip; calm it down ── */
+.entry-entry .discourse-post-event {
+  margin-bottom: 1.1em;
+}
+
+@media (max-width: 700px) {
+  .d-wrap[data-wrap="entry"] {
+    .entry-title { font-size: 1.42em; }
+    .entry-facts {
+      grid-template-columns: 1fr;
+      gap: 0;
+      dt { padding-bottom: 0; }
+      dd { padding-top: 0.1em; padding-bottom: 0.65em; }
+    }
+  }
+  ul.entry-connected .ec-kind { display: block; min-width: 0; }
+}

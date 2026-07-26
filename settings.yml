@@ -151,3 +151,28 @@ label_works:
 label_noworks_short:
   type: string
   default: "no works yet — add one"
+
+# ── entry system ────────────────────────────────────────────────────────────
+# Format: slug:DISPLAY LABEL:schema.org type, separated by |
+entry_types:
+  type: string
+  default: "event:EVENT:Event|person:PERSON:Person|place:PLACE:Place|object:OBJECT:CreativeWork|org:ORGANISATION:Organization|claim:CLAIM:Claim|concept:CONCEPT:DefinedTerm|work:WORK:CreativeWork"
+label_entry_needs:
+  type: string
+  default: "THIS ENTRY NEEDS"
+label_entry_needs_hint:
+  type: string
+  default: "Know one of these? Reply below — or tick it once it's been added."
+label_entry_complete:
+  type: string
+  default: "NOTHING OUTSTANDING"
+label_entry_connected:
+  type: string
+  default: "Connected"
+label_entry_reviewed:
+  type: string
+  default: "Last checked"
+# Which row label in the fact table carries the review date (pulled out of the strip)
+label_entry_reviewed_key:
+  type: string
+  default: "Reviewed"
