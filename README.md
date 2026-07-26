@@ -189,6 +189,33 @@ and the JSON-LD simply carries no date, which is better than carrying a wrong on
 **The needs list uses real `- [ ]` checklist syntax**, so the `checklist` plugin owns ticking. The
 component only adds the heading and the done/total count.
 
+### ⚠ The authoring rule that governs every surface
+
+**Discourse renders the post. Anything the component computes, fetches, or reads out of a `data-*`
+attribute does not exist for search engines or for anyone without JavaScript.**
+
+Verified 26 July by fetching the live site anonymously (the crawler view is suppressed for logged-in
+users, so you must check while logged out):
+
+| Surface | What a crawler actually gets |
+|---|---|
+| Entry page | dek, fact table, every section, every link — **correct** |
+| Concept page | the essay and two bare links. **No grid, no gallery, no scores** — the live page shows four works, the HTML has two links |
+| Vault work | poster and prose, but no card metadata; each pairing renders as `- 1 - 2 - 3 - 4 - 5 / 0 voters` |
+| Chronovisor exhibit | the full document (excellent), but the snippet is the document's ASCII header and the manifest is invisible |
+
+The two components read **21 distinct `data-*` attributes**. Every fact in them is invisible.
+
+**So: author facts as markdown; let the component be a skin.** A fact strip authored as a markdown
+table renders as a real `<table>` server-side and gets restyled client-side. A fact authored as
+`data-year="2004"` renders as nothing. This is the single highest-leverage rule in the project and
+the entry system is currently the only surface that follows it.
+
+Corollary: **the first block of a post becomes the Google snippet.** Lead with a human sentence,
+never a fact table and never a verbatim document header.
+
+---
+
 #### The gate: when is something an entry, and when is it a section?
 
 **An entry must contain at least one fact that appears in no other entry. If it doesn't, it is a
@@ -219,6 +246,10 @@ Types remain available — all eight — but the gate decides, not the type.
 
 #### ⚠ Entry-specific traps
 
+- **The four extra poll axes are dormant, not dead.** `poll_labels` defines `accessibility`,
+  `register`, `strangeness` and `footprint`; `curiobase.js` filters polls by those exact names and
+  renders them as a *calibration ballot*. No content uses them today. It looks like dead code and
+  isn't — deleting it removes a working feature.
 - **Needs must be a fixed block at the END of the post.** The checklist plugin finds boxes by
   counting `[ ]` / `[x]` pairs by ordinal position in the raw markdown. A stray bracket pair earlier
   in the post will make a tick flip the wrong box.

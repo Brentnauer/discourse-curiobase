@@ -34,15 +34,9 @@ label_grid_hint:
 label_awaiting:
   type: string
   default: "not yet scored — be first"
-label_editorial:
-  type: string
-  default: "Editorial"
 label_community:
   type: string
   default: "Community"
-label_referenced:
-  type: string
-  default: "Referenced by"
 label_chronostrip:
   type: string
   default: "From the Chronovisor"
@@ -76,9 +70,6 @@ screening_id:
 label_nominate_cta:
   type: string
   default: "Nominate a work or concept →"
-label_assessment:
-  type: string
-  default: "why this work engages the idea"
 label_vote_cta:
   type: string
   default: "open the work & score it →"
@@ -106,9 +97,6 @@ label_axis_x_hint:
 label_axis_y_hint:
   type: string
   default: "how far does it follow the idea? 1 = tidied into a neat ending · 5 = pursued past the point of comfort"
-label_unrated:
-  type: string
-  default: "unrated by Editorial"
 label_challenge_btn:
   type: string
   default: "challenge this score"
@@ -136,9 +124,6 @@ label_nonfiction:
 label_score_prefix:
   type: string
   default: "SCORE THIS WORK AGAINST"
-label_this_work:
-  type: string
-  default: "this work"
 label_counting:
   type: string
   default: "…"

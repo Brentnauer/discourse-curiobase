@@ -139,21 +139,6 @@ body.curio-wing, body.vault-wing {
       text-decoration: none;
       &:hover { color: $curio; }
     }
-    .cw-tier {
-      font-family: ui-monospace, Consolas, monospace;
-      font-size: 0.62em;
-      letter-spacing: 0.18em;
-      border: 1px solid;
-      padding: 2px 8px;
-      border-radius: 2px;
-    }
-    .cw-score {
-      font-family: ui-monospace, Consolas, monospace;
-      font-size: 0.75em;
-      color: $dim;
-    }
-    .cw-community { color: $curio; }
-    .cw-awaiting { color: $dim; font-style: italic; }
   }
 }
 
@@ -405,35 +390,6 @@ body.curio-wing, body.vault-wing {
   border-left: 3px solid #2aa79b;
   padding-left: 1em;
   margin: 1.4em 0 0.5em;
-
-  .curio-gravhead {
-    display: flex;
-    align-items: baseline;
-    gap: 1em;
-    flex-wrap: wrap;
-    padding-bottom: 0.4em;
-    border-bottom: 1px solid color-mix(in srgb, #2aa79b 20%, transparent);
-    margin-bottom: 0.6em;
-
-    .cg-concept {
-      font-family: Georgia, serif;
-      font-size: 1.1em;
-      font-weight: 700;
-      color: var(--primary, #e8e6e3);
-      text-decoration: none;
-      &:hover { color: #2aa79b; }
-    }
-    .cw-tier {
-      font: 0.6em ui-monospace, monospace;
-      letter-spacing: 0.16em;
-      border: 1px solid;
-      padding: 2px 7px;
-      border-radius: 2px;
-    }
-    .cw-score { font: 0.72em ui-monospace, monospace; color: var(--primary-medium, #9aa0a6); }
-    .cw-community { color: #2aa79b; }
-    .cw-awaiting { font-style: italic; }
-  }
 }
 
 // ═══ v3: hero grid, ballots, compact polls ═══
@@ -737,8 +693,6 @@ body.vault-wing, body.curio-wing {
   }
   .gp-hint { font: 0.62em ui-monospace, monospace; color: #2aa79b; letter-spacing: 0.06em; }
 }
-.cg-glyphholder { margin-right: 0.2em; }
-.curio-gravhead { align-items: center; }
 
 .cgal-gravity {
   display: flex;
@@ -1123,7 +1077,6 @@ body.curio-dossier-ready .topic-post.curio-edge-post {
 
 // edge post: strip everything except its ballot; the row above carries meaning
 body.curio-dossier-ready .topic-post.curio-edge-post {
-  .curio-gravhead, .cg-def, .cooked > p, .cooked > .d-wrap[data-wrap="curio-gravity"] { display: none !important; }
   .cooked > .curio-ballot { display: block; }
   margin-top: -8px;
 }
