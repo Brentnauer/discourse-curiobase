@@ -24,12 +24,12 @@ import {
   buildGallery,
 } from "../lib/scoring";
 
-import { renderEntry, applyEntryBodyClass, buildEntryIndex } from "../lib/entries";
+import { renderRecord, applyRecordBodyClass, buildEntryIndex } from "../lib/record";
 
 export default apiInitializer("1.0", (api) => {
   api.onPageChange(() => {
     const b = document.body;
-    applyEntryBodyClass(api);
+    applyRecordBodyClass(api);
     ["curio-wing", "vault-wing", "vault-entry", "curio-entry"].forEach((c) => b.classList.remove(c));
     document.getElementById("curio-wingnav")?.remove();
     const cat = currentCategory(api);
@@ -503,11 +503,11 @@ export default apiInitializer("1.0", (api) => {
 
       // ── entry system: event / person / place / object / org / claim ──
       try {
-        renderEntry(el, post, api);
+        renderRecord(el, post, api);
       } catch (e) {
         // never let an entry failure take down the scoring surfaces below
         // eslint-disable-next-line no-console
-        console.warn("[curiobase] entry render failed", e);
+        console.warn("[curiobase] record render failed", e);
       }
 
       // ── concept entry: masthead + self-populating gallery + grid ──

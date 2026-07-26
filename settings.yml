@@ -141,7 +141,7 @@ label_noworks_short:
 # Format: slug:DISPLAY LABEL:schema.org type, separated by |
 entry_types:
   type: string
-  default: "event:EVENT:Event|person:PERSON:Person|place:PLACE:Place|object:OBJECT:CreativeWork|org:ORGANISATION:Organization|claim:CLAIM:Claim|concept:CONCEPT:DefinedTerm|work:WORK:CreativeWork"
+  default: "event:EVENT:Event|person:PERSON:Person|place:PLACE:Place|object:OBJECT:CreativeWork|org:ORGANISATION:Organization|claim:CLAIM:Claim|concept:CONCEPT:DefinedTerm|work:WORK:CreativeWork|exhibit:EXHIBIT:CreativeWork"
 label_entry_needs:
   type: string
   default: "THIS ENTRY NEEDS"

@@ -189,6 +189,62 @@ and the JSON-LD simply carries no date, which is better than carrying a wrong on
 **The needs list uses real `- [ ]` checklist syntax**, so the `checklist` plugin owns ticking. The
 component only adds the heading and the done/total count.
 
+## The record — one shape for everything
+
+```
+[wrap=tti type="work" slug="primer-2004"]
+
+One sentence a stranger could repeat back to you.
+
+|  |  |
+|---|---|
+| **Medium** | Film |
+| **Year** | 2004 |
+| **Creator** | Shane Carruth |
+| **Reviewed** | 2026-07-26 |
+
+[/wrap]
+
+![poster](…)
+
+The body. Then media, then anything else.
+```
+
+`type` is one of: `event · person · place · object · org · claim · work · concept · exhibit`
+(the list is the `entry_types` setting — adding a type is config, not code).
+
+**Every record has the same three-part anatomy, whatever its type:**
+
+| | |
+|---|---|
+| **Record header** | type badge · title · dek · fact strip · reviewed stamp |
+| **Body** | the essay, the document, the description |
+| **Derived views** | works grid, witness register, needs list, Related Topics |
+
+### Relationships are not authored
+
+**Do not write "Connected" lists.** Tag the record instead. Discourse derives the rest:
+
+- `/tag/causal-loop` — everything about it, server-rendered
+- `/tags/intersection/causal-loop/temporal-perception` — faceted, server-rendered, **cross-category**
+- Related Topics surfaces siblings with no work at all
+
+Verified: tagging Causal Loop with `temporal-perception` produced a five-item derived list —
+Primer, Timecrimes, 12 Monkeys, Cause and Effect and the concept itself — with nothing authored.
+
+Authored relationships are O(n²) work that goes stale silently. Tags are O(1) and always current.
+
+Keep a hand-written link only where the relationship is a *specific claim about two specific things*
+("Halt wrote this memo"), never for category membership.
+
+### Migration
+
+Legacy wraps (`curio-card`, `curio-concept`, `entry`) still have their own renderers, so nothing
+broke. **Converting a post to `[wrap=tti]` is what moves it onto the new path — there is no flag
+day.** Once nothing uses a legacy wrap, delete its renderer.
+
+---
+
 ### ⚠ The authoring rule that governs every surface
 
 **Discourse renders the post. Anything the component computes, fetches, or reads out of a `data-*`

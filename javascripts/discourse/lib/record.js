@@ -1,24 +1,38 @@
-// The TTI entry system: event, person, place, object, org, claim.
+// THE TTI RECORD — one shape for every kind of thing the site holds.
 //
-// Design rules this file obeys, and why:
+//   [wrap=tti type="event|person|place|object|org|claim|work|concept|exhibit" slug="…"]
 //
-//  1. KEYED ON TAGS, NOT CATEGORIES. Entries are identified by the `entry-*` tag and the
-//     `[wrap=entry type="..."]` block, never by category id. The category tree is being
-//     restructured; tags are not. Wiring entries to category ids would break them all on
-//     the day the consolidation runs.
+// Every record has the same three-part anatomy, whatever its type:
+//
+//   RECORD HEADER   type badge · title · dek · fact strip · reviewed stamp   (this file)
+//   BODY            the essay, the document, the description                 (authored prose)
+//   DERIVED VIEWS   works grid, witness register, needs list, Related Topics (elsewhere / native)
+//
+// Design rules, and why:
+//
+//  1. KEYED ON TAGS AND THE WRAP, NEVER ON CATEGORY ID. The category tree is being
+//     restructured; tags are not.
 //
 //  2. THE MARKDOWN IS THE STRUCTURE. The fact strip is authored as a real markdown table,
-//     so it renders server-side as a real <table> that a crawler reads. This file only
-//     restyles what is already there. If the JavaScript never loads, the entry still
-//     works and still ranks.
+//     so it renders server-side as a <table> a crawler reads. This file only restyles it.
+//     Facts in data-* attributes are invisible to search engines — that was the single
+//     biggest defect found in the 26 July audit, and this shape is the fix.
 //
-//  3. THE PLUGIN DOES THE BEHAVIOUR. Needs lists are authored as real `- [ ]` checklist
-//     items so the checklist plugin makes them tickable. This file adds the heading and
-//     the count; it does not reimplement ticking.
+//  3. RELATIONSHIPS ARE NOT AUTHORED. No hand-typed "Connected" lists. Tag the record and
+//     let Discourse derive the connections: tag pages and tag intersections are
+//     server-rendered and free, and Related Topics surfaces siblings automatically.
+//     Authored relationships are O(n^2) work that goes stale silently.
+//
+//  4. THE PLUGIN DOES THE BEHAVIOUR. Checklists, polls and events belong to their plugins.
+//
+// Legacy wraps (curio-card, curio-concept, chrono-manifest) still have their own renderers.
+// Converting a post to [wrap=tti] is what moves it onto this path — there is no flag day.
 
 import { decode, prettify, fetchJson } from "./helpers";
 
 // ── type vocabulary: slug : DISPLAY : schema.org type ──
+// One list covers every record on the site — entries, Vault works, concepts and
+// Chronovisor exhibits. Adding a type is a settings change, not a code change.
 function entryTypes() {
   const map = {};
   (settings.entry_types || "").split("|").forEach((chunk) => {
@@ -256,10 +270,12 @@ function injectJsonLd(wrap, { type, title, dek, facts, url }) {
 }
 
 // ── the whole entry surface, called from decorateCookedElement ──
-export function renderEntry(el, post, api) {
+export function renderRecord(el, post, api) {
   el.querySelectorAll('.d-wrap[data-wrap="entry-needs"]').forEach((w) => decorateNeeds(w, api, post));
 
-  el.querySelectorAll('.d-wrap[data-wrap="entry"]').forEach((wrap) => {
+  // `tti` is the vocabulary. `entry` is kept as an alias so already-published entries
+  // keep rendering; it can go once nothing uses it.
+  el.querySelectorAll('.d-wrap[data-wrap="tti"], .d-wrap[data-wrap="entry"]').forEach((wrap) => {
     if (wrap.querySelector(".entry-masthead")) return;
 
     const type = decode(wrap.dataset.type || "");
@@ -468,7 +484,7 @@ function tname(x) {
 // onPageChange, so a class set during render was being wiped by the reset a moment later.
 // Reading the entry type off the topic's `entry-*` tag makes it independent of decorator
 // ordering, and it works on every route the topic model is available on.
-export function applyEntryBodyClass(api) {
+export function applyRecordBodyClass(api) {
   const b = document.body;
   [...b.classList].forEach((c) => {
     if (c === "entry-entry" || c.startsWith("entry-is-")) b.classList.remove(c);
