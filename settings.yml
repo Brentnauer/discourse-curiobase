@@ -179,3 +179,21 @@ label_entry_reviewed_key:
 label_entry_needs_cta:
   type: string
   default: "Reply with what you know"
+entries_id:
+  type: integer
+  default: 0
+label_nav_entries:
+  type: string
+  default: "Entries"
+label_entry_index_title:
+  type: string
+  default: "THE ENTRIES"
+label_entry_index_hint:
+  type: string
+  default: "One page per subject. Anything with an open question is asking for help."
+label_entry_index_empty:
+  type: string
+  default: "No entries yet."
+label_entry_contributions:
+  type: string
+  default: "contributions"

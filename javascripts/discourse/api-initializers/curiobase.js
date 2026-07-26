@@ -24,7 +24,7 @@ import {
   buildGallery,
 } from "../lib/scoring";
 
-import { renderEntry, applyEntryBodyClass } from "../lib/entries";
+import { renderEntry, applyEntryBodyClass, buildEntryIndex } from "../lib/entries";
 
 export default apiInitializer("1.0", (api) => {
   api.onPageChange(() => {
@@ -55,11 +55,14 @@ export default apiInitializer("1.0", (api) => {
       a.textContent = label;
       return a;
     };
+    const en = catById(api, settings.entries_id);
     nav.append(
-      mk("Curiobase", cb, inCurio && cat.id !== settings.nominations_id),
-      mk("The Vault", vt, inVault),
-      mk("Nominate", nm || cb, cat.id === settings.nominations_id)
+      mk("Curiobase", cb, inCurio && cat.id !== settings.nominations_id && cat.id !== settings.entries_id),
+      mk("The Vault", vt, inVault)
     );
+    // entries are only reachable if they have somewhere to be reached from
+    if (en) nav.append(mk(settings.label_nav_entries, en, cat.id === settings.entries_id));
+    nav.append(mk("Nominate", nm || cb, cat.id === settings.nominations_id));
     const int = setInterval(() => {
       const outlet = document.getElementById("main-outlet");
       if (outlet && !document.getElementById("curio-wingnav")) { outlet.prepend(nav); }
@@ -98,6 +101,7 @@ export default apiInitializer("1.0", (api) => {
     document.getElementById("curio-atlas")?.remove();
     document.getElementById("curio-domain-index")?.remove();
     document.getElementById("vault-index")?.remove();
+    document.getElementById("entry-index")?.remove();
     document.body.classList.remove("curio-index-active");
     const cat = currentCategory(api);
     if (!cat) return;
@@ -116,6 +120,17 @@ export default apiInitializer("1.0", (api) => {
       }, 150);
       setTimeout(() => clearInterval(int), 2500);
     };
+    // the entries index — its own listing page, grouped by type
+    if (settings.entries_id && cat.id === parseInt(settings.entries_id, 10)) {
+      try {
+        await buildEntryIndex(api, mount);
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn("[curiobase] entry index failed", e);
+      }
+      return;
+    }
+
     const conceptCard = (t) => {
       const a = document.createElement("a");
       a.className = "ca-card";

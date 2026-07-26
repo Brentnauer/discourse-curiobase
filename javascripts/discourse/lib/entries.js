@@ -16,7 +16,7 @@
 //     items so the checklist plugin makes them tickable. This file adds the heading and
 //     the count; it does not reimplement ticking.
 
-import { decode, prettify } from "./helpers";
+import { decode, prettify, fetchJson } from "./helpers";
 
 // ── type vocabulary: slug : DISPLAY : schema.org type ──
 function entryTypes() {
@@ -316,6 +316,129 @@ export function renderEntry(el, post, api) {
   });
 
   decorateConnected(el);
+}
+
+// ── the entries index ──
+//
+// Built from ONE category request. The listing does not carry excerpts, so showing a dek per
+// entry would cost a fetch per entry -- the same waste that made a John Titor concept page
+// issue 19 requests to render 2 works. Discovery does not justify that; titles, type and
+// contribution counts do the job.
+export async function buildEntryIndex(api, mountInto) {
+  const id = parseInt(settings.entries_id, 10);
+  if (!id) return null;
+
+  let topics = [];
+  try {
+    const feed = await fetchJson(`/c/${id}.json`);
+    topics = feed.topic_list?.topics || [];
+  } catch {
+    return null;
+  }
+
+  // drop the category definition topic — it is machinery, not an entry
+  topics = topics.filter((t) => !t.pinned || (t.tags || []).some((x) => tname(x).startsWith("entry-")));
+
+  const types = entryTypes();
+  const groups = new Map();
+  topics.forEach((t) => {
+    const tag = (t.tags || []).map(tname).find((x) => x.startsWith("entry-"));
+    if (!tag) return;
+    const key = tag.replace(/^entry-/, "");
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(t);
+  });
+
+  const wrap = document.createElement("section");
+  wrap.id = "entry-index";
+
+  const head = document.createElement("div");
+  head.className = "ei-head";
+  const h = document.createElement("h2");
+  h.className = "ei-title";
+  h.textContent = settings.label_entry_index_title;
+  head.append(h);
+  const n = [...groups.values()].reduce((a, g) => a + g.length, 0);
+  const count = document.createElement("span");
+  count.className = "ei-count";
+  count.textContent = String(n);
+  head.append(count);
+  wrap.append(head);
+
+  if (settings.label_entry_index_hint) {
+    const hint = document.createElement("p");
+    hint.className = "ei-hint";
+    hint.textContent = settings.label_entry_index_hint;
+    wrap.append(hint);
+  }
+
+  if (!n) {
+    const empty = document.createElement("p");
+    empty.className = "ei-empty";
+    empty.textContent = settings.label_entry_index_empty;
+    wrap.append(empty);
+    mountInto(wrap);
+    return wrap;
+  }
+
+  // preserve the order the type vocabulary is declared in, not alphabetical
+  const order = Object.keys(types);
+  [...groups.keys()]
+    .sort((a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99))
+    .forEach((key) => {
+      const info = types[key] || { label: prettify(key) };
+      const sec = document.createElement("div");
+      sec.className = `ei-group ei-is-${key}`;
+
+      const lab = document.createElement("span");
+      lab.className = `entry-type et-${key}`;
+      lab.textContent = info.label;
+      sec.append(lab);
+
+      const ul = document.createElement("ul");
+      ul.className = "ei-list";
+      groups
+        .get(key)
+        .sort((a, b) => (a.title || "").localeCompare(b.title || ""))
+        .forEach((t) => {
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.className = "ei-link";
+          a.href = `/t/${t.slug}/${t.id}`;
+          a.textContent = t.title;
+          li.append(a);
+
+          const subj = (t.tags || [])
+            .map(tname)
+            .filter((x) => x && !x.startsWith("entry-"))
+            .slice(0, 3);
+          if (subj.length) {
+            const s = document.createElement("span");
+            s.className = "ei-tags";
+            s.textContent = subj.join(" · ");
+            li.append(s);
+          }
+
+          const contributions = Math.max(0, (t.posts_count || 1) - 1);
+          if (contributions > 0) {
+            const c = document.createElement("span");
+            c.className = "ei-contrib";
+            c.textContent = `${contributions} ${settings.label_entry_contributions}`;
+            li.append(c);
+          }
+          ul.append(li);
+        });
+      sec.append(ul);
+      wrap.append(sec);
+    });
+
+  mountInto(wrap);
+  return wrap;
+}
+
+// tag entries arrive as either strings or {name} objects depending on the endpoint
+function tname(x) {
+  return typeof x === "string" ? x : x?.name || "";
 }
 
 // ── body state, driven from the topic's tags ──
