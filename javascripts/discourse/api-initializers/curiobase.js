@@ -512,6 +512,10 @@ export default apiInitializer("1.0", (api) => {
       }
 
       // ── concept entry: masthead + self-populating gallery + grid ──
+      // Each surface is isolated. One thrown error used to abort the whole decorator,
+      // taking the masthead, grid, gallery AND vault card down together -- which is
+      // exactly what a stray non-string tag did.
+      try {
       el.querySelectorAll('.d-wrap[data-wrap="tti"][data-type="concept"], .d-wrap[data-wrap="curio-concept"]').forEach(async (w) => {
         if (w.querySelector(".curio-masthead")) return;
         // A unified record keeps its facts in the markdown table and its relationships in
@@ -525,11 +529,15 @@ export default apiInitializer("1.0", (api) => {
           if (k && v) wFacts[k] = v;
         });
         const conceptSlug = decode(w.dataset.slug || w.dataset.concept || "");
+        // Topic tags arrive as either strings or {name} objects depending on where they
+        // come from. Not normalising them threw `e.trim is not a function`, which killed
+        // the WHOLE decorator -- masthead, grid, gallery and vault card at once.
         const relatedTags = (() => {
-          if (w.dataset.related) return decode(w.dataset.related).split(",");
           try {
-            const tags = api.container.lookup("controller:topic")?.model?.tags || [];
-            return tags.filter((t) => t !== conceptSlug);
+            const raw = w.dataset.related
+              ? decode(w.dataset.related).split(",")
+              : api.container.lookup("controller:topic")?.model?.tags || [];
+            return raw.map(tagName).filter((t) => t && t !== conceptSlug);
           } catch { return []; }
         })();
 
@@ -539,11 +547,11 @@ export default apiInitializer("1.0", (api) => {
         dom.className = "cm-domain";
         dom.textContent = wFacts.domain || decode(w.dataset.domain || "");
         mast.append(dom);
-        relatedTags.filter(Boolean).forEach((slug) => {
+        relatedTags.forEach((slug) => {
           const a = document.createElement("a");
           a.className = "cm-related";
-          a.href = `/tag/${slug.trim()}`;
-          a.textContent = prettify(slug.trim());
+          a.href = `/tag/${slug}`;
+          a.textContent = prettify(slug);
           mast.append(a);
         });
         w.prepend(mast);
@@ -607,6 +615,9 @@ export default apiInitializer("1.0", (api) => {
       });
 
       // ── vault card ──
+      } catch (e) { console.warn("[curiobase] concept surface failed", e); }
+
+      try {
       el.querySelectorAll('.d-wrap[data-wrap="tti"][data-type="work"], .d-wrap[data-wrap="curio-card"]').forEach((w) => {
         if (w.querySelector(".curio-cardhead")) return;
         // On a unified record the header (badge, title, dek, fact strip) is already
@@ -702,6 +713,8 @@ export default apiInitializer("1.0", (api) => {
         w.prepend(head);
       });
 
+
+      } catch (e) { console.warn("[curiobase] vault card surface failed", e); }
 
       // ── ballots: polls grouped into labeled voting boxes ──
       try {
