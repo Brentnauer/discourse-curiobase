@@ -520,6 +520,9 @@ export default apiInitializer("1.0", (api) => {
         if (w.querySelector(".curio-masthead")) return;
         // A unified record keeps its facts in the markdown table and its relationships in
         // tags. Read the table first, fall back to the legacy attributes.
+        // renderRecord runs FIRST in this same decorator and replaces the authored
+        // <table> with a styled <dl>. Reading only the table therefore finds nothing by
+        // the time this runs -- read whichever is present.
         const wFacts = {};
         w.querySelectorAll("table tr").forEach((tr) => {
           const c = tr.querySelectorAll("td, th");
@@ -527,6 +530,13 @@ export default apiInitializer("1.0", (api) => {
           const k = (c[0].textContent || "").trim().toLowerCase();
           const v = (c[1].textContent || "").trim();
           if (k && v) wFacts[k] = v;
+        });
+        const dts = [...w.querySelectorAll(".entry-facts dt")];
+        const dds = [...w.querySelectorAll(".entry-facts dd")];
+        dts.forEach((dt, i) => {
+          const k = (dt.textContent || "").trim().toLowerCase();
+          const v = (dds[i]?.textContent || "").trim();
+          if (k && v && !wFacts[k]) wFacts[k] = v;
         });
         const conceptSlug = decode(w.dataset.slug || w.dataset.concept || "");
         // Topic tags arrive as either strings or {name} objects depending on where they
