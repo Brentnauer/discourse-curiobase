@@ -1495,8 +1495,11 @@ ul.entry-connected {
   }
 }
 
-/* the native tag description is redundant once the concept header is mounted */
-.tag-concept-active .tag-info .tag-description { display: none; }
+/* Two headers saying the same thing is worse than either alone. When the concept
+   header mounts, Discourse's native tag banner becomes redundant — it repeats the
+   name and a shorter version of the same definition. Suppressed only when we have
+   actually replaced it, so a non-concept tag keeps its native banner. */
+.tag-concept-active .tag-banner-container { display: none; }
 
 @media (max-width: 700px) {
   #tag-concept .tc-title { font-size: 1.42em; }
