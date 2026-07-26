@@ -1195,6 +1195,9 @@ $entry: #7f8fa6;
 .et-concept { background: #2aa79b; }
 .et-work    { background: #9aa0a6; }
 
+/* `tti` is the record vocabulary; `entry` is the legacy alias. Both must be styled or a
+   converted post silently loses its fact-strip grid and renders as a vertical stack. */
+.d-wrap[data-wrap="tti"],
 .d-wrap[data-wrap="entry"] {
   margin: 0 0 1.4em;
 
@@ -1342,6 +1345,7 @@ ul.entry-connected {
 }
 
 @media (max-width: 700px) {
+  .d-wrap[data-wrap="tti"],
   .d-wrap[data-wrap="entry"] {
     .entry-title { font-size: 1.42em; }
     .entry-facts {
@@ -1480,4 +1484,14 @@ ul.entry-connected {
   font-size: 0.84em;
   color: $entry;
   &::before { content: "🔍 "; }
+}
+
+/* Records that lost their grid render as a vertical label/value stack, which is how the
+   first converted work shipped. If the grid is unsupported, fall back to something that
+   still reads as a pair rather than as eleven stacked lines. */
+@supports not (display: grid) {
+  .entry-facts {
+    dt { float: left; clear: left; min-width: 8em; }
+    dd { margin-left: 8.6em; }
+  }
 }
