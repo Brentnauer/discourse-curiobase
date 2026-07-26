@@ -125,6 +125,63 @@ The essay.
 
 `dek` is optional — without it the component summarises the first substantial paragraph.
 
+### Entry — event · person · place · object · org · claim
+
+Entries live in **Curiobase → Entries (118)**, which is wiki-by-default and carries a topic
+template. They are identified by the wrap and the `entry-*` tag, **never by category id.**
+
+```
+[wrap=entry type="event" slug="rendlesham-forest-incident"
+            dek="One sentence a stranger could repeat back to you."]
+
+|  |  |
+|---|---|
+| **When** | 26–28 December 1980 |
+| **Where** | Rendlesham Forest, Suffolk |
+| **Witnesses** | [Charles Halt](/t/charles-halt/1235) |
+| **Reviewed** | 2026-07-26 |
+
+[/wrap]
+
+[event start="1980-12-26" end="1980-12-28" status="standalone" allDay="true"
+       timezone="Europe/London" name="Rendlesham Forest incident"]
+[/event]
+
+## What happened
+Prose. Reports what sources say; does not adjudicate.
+
+## Connected
+- **Concept** — [UAP & Phenomena](/t/uap-phenomena/19616)
+
+[wrap=entry-needs]
+- [ ] the exact date the memo was filed
+- [ ] a photograph from the period
+[/wrap]
+```
+
+**The fact table is authored as real markdown on purpose.** It renders server-side as a real
+`<table>` that a crawler reads; the component swaps in a styled `<dl>`. If the JavaScript never
+loads, the facts are still there. The `Reviewed` row is pulled out and shown as a freshness stamp.
+
+**The needs list uses real `- [ ]` checklist syntax**, so the `checklist` plugin owns ticking. The
+component only adds the heading and the done/total count.
+
+#### ⚠ Entry-specific traps
+
+- **Needs must be a fixed block at the END of the post.** The checklist plugin finds boxes by
+  counting `[ ]` / `[x]` pairs by ordinal position in the raw markdown. A stray bracket pair earlier
+  in the post will make a tick flip the wrong box.
+- **Only users who can *edit* get clickable boxes.** That's why the category is wiki-by-default.
+  Without wiki, members see dead glyphs.
+- **Every tick writes a revision and bumps the topic to /latest.** No setting disables this.
+- **`status="standalone"`** on the event block — otherwise a 45-year-old event gets RSVP buttons.
+- **New categories need `allowed_tag_groups` set explicitly.** Left empty, tags are silently
+  dropped on save — the API returns 200 and simply doesn't apply them. Every other category on TTI
+  declares its groups; follow that. Do **not** set `required_tag_groups` — that breaks topic
+  creation for members.
+- `entry-*` tags are in the **Entry Type (staff)** group, `one_per_topic`, staff-only. They drive
+  rendering, so they're curation vocabulary rather than subject description.
+
 ---
 
 ## ⚠ Format rules, learned the hard way
