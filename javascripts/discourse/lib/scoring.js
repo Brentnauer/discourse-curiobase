@@ -199,14 +199,21 @@ function buildGrid(works) {
     g.addEventListener("click", () => { window.location.href = `/t/${w.slug}/${w.topic_id}${w.post_number > 1 ? "/" + w.post_number : ""}`; });
     svg.append(g);
   });
-  if (unscored) {
-    svg.append(mk("text", { x: W - P, y: P - 14, class: "cg-axis cg-a-end" }, `${unscored} not yet scored`));
-  }
   const holder = document.createElement("div");
   holder.className = "curio-grid-holder";
   const cap = document.createElement("div");
   cap.className = "curio-grid-hint";
   cap.textContent = settings.label_grid_hint;
+  // The unscored count used to be SVG text at the top-right of the plot, where any work
+  // scoring high on both axes sat on top of it -- and a high-scoring work is the normal
+  // case, so the label was usually unreadable. It is not plot data; it belongs in the
+  // caption, where nothing can land on it.
+  if (unscored) {
+    const u = document.createElement("span");
+    u.className = "cg-unscored";
+    u.textContent = `${unscored} not yet scored`;
+    cap.append(u);
+  }
   holder.append(svg, cap);
   return holder;
 }
