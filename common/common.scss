@@ -1504,3 +1504,63 @@ ul.entry-connected {
 @media (max-width: 700px) {
   #tag-concept .tc-title { font-size: 1.42em; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   THREE LAYOUTS, ONE VOCABULARY
+
+   These are three products that share a data shape and share nothing else.
+   Giving them one template put a film's poster sixth on its own page.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── CARD: works. Poster-led, the way every media database is. ── */
+.d-wrap[data-wrap="tti"].record-card {
+  &.has-poster {
+    display: grid;
+    grid-template-columns: 132px 1fr;
+    gap: 1.4em;
+    align-items: start;
+  }
+
+  .rc-poster {
+    grid-row: 1 / span 3;
+    p { margin: 0; }
+    img {
+      width: 100%;
+      border-radius: 4px;
+      display: block;
+      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+    }
+  }
+
+  .entry-masthead { margin-bottom: 0; }
+  .entry-title { margin-top: 0.15em; }
+
+  /* metadata as one inline row — five facts don't need five rows */
+  .rc-meta {
+    margin-top: 0.7em;
+    font-size: 0.9em;
+    color: var(--primary-medium, #9aa0a6);
+    line-height: 1.7;
+  }
+  .rc-fact {
+    &::after {
+      content: " · ";
+      opacity: 0.5;
+      padding: 0 0.15em;
+    }
+    &:last-child::after { content: ""; }
+    a { color: inherit; border-bottom: 1px solid color-mix(in srgb, currentColor 35%, transparent); }
+  }
+}
+
+/* ── INDEX: concepts. Definition and what's filed here; no fact table. ── */
+.d-wrap[data-wrap="tti"].record-index {
+  .entry-title { margin-bottom: 0.1em; }
+}
+
+@media (max-width: 700px) {
+  .d-wrap[data-wrap="tti"].record-card.has-poster {
+    grid-template-columns: 92px 1fr;
+    gap: 1em;
+  }
+}

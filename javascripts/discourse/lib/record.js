@@ -328,17 +328,61 @@ export function renderRecord(el, post, api) {
       mast.append(d);
     }
 
+    // ── LAYOUT, chosen by type ──
+    //
+    // One authoring vocabulary, three layouts. These are three different products that
+    // happen to share a data shape; giving them one template put a film's poster sixth
+    // on its own page, under a document header it never wanted.
+    //
+    //   card      works        poster-led, metadata inline   (TTIDB)
+    //   index     concepts     definition + what's filed here (the join)
+    //   document  everything else                             (encyclopedia)
+    const layout = type === "work" ? "card" : type === "concept" ? "index" : "document";
+    wrap.classList.add(`record-${layout}`);
+
     wrap.prepend(mast);
 
-    if (table) {
-      table.replaceWith(strip);
-    }
-
-    if (reviewed) {
-      const r = document.createElement("div");
-      r.className = "entry-reviewed";
-      r.textContent = `${settings.label_entry_reviewed} ${reviewed}`;
-      wrap.append(r);
+    if (layout === "card") {
+      // The poster IS the identity of a work. Lift it beside the title rather than
+      // leaving it below the prose, and render the facts as one inline row: five facts
+      // do not need five rows of a definition list.
+      const poster =
+        wrap.querySelector("img") ||
+        wrap.closest(".cooked")?.querySelector("img");
+      if (poster) {
+        const fig = document.createElement("div");
+        fig.className = "rc-poster";
+        fig.append(poster.closest("p") || poster);
+        wrap.prepend(fig);
+        wrap.classList.add("has-poster");
+      }
+      if (rows.length) {
+        const line = document.createElement("div");
+        line.className = "rc-meta";
+        rows
+          .filter((r) => r.label.toLowerCase() !== String(settings.label_entry_reviewed_key || "reviewed").toLowerCase())
+          .forEach(({ valueCell }) => {
+            const span = document.createElement("span");
+            span.className = "rc-fact";
+            while (valueCell.firstChild) span.append(valueCell.firstChild);
+            line.append(span);
+          });
+        mast.append(line);
+      }
+      table?.remove();
+      // no freshness stamp on a work: a runtime does not go stale
+    } else if (layout === "index") {
+      // A concept has no facts worth tabulating — a one-row "Domain" table is noise.
+      // The domain already appears in the masthead.
+      table?.remove();
+    } else {
+      if (table) table.replaceWith(strip);
+      if (reviewed) {
+        const r = document.createElement("div");
+        r.className = "entry-reviewed";
+        r.textContent = `${settings.label_entry_reviewed} ${reviewed}`;
+        wrap.append(r);
+      }
     }
 
     if (isFirst) {
