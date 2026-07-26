@@ -286,6 +286,15 @@ export function renderRecord(el, post, api) {
 
     const { table, rows } = readFacts(wrap);
 
+    // Publish the facts on the element before ANY layout runs.
+    //
+    // This file consumes the authored table -- replacing it with a <dl> for documents,
+    // removing it for cards and indexes -- and later decorators (the concept masthead,
+    // the vault card) then have nothing to read. That has now caused four separate
+    // silent failures: missing JSON-LD dates, an empty concept domain twice, and a
+    // metadata row of bare separators. Later readers use this, never the DOM.
+    wrap.ttiFacts = Object.fromEntries(rows.map((r) => [r.label.toLowerCase(), r.text]));
+
     const mast = document.createElement("div");
     mast.className = "entry-masthead";
 

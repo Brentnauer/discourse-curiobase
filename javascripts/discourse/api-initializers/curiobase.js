@@ -543,7 +543,10 @@ export default apiInitializer("1.0", (api) => {
         // renderRecord runs FIRST in this same decorator and replaces the authored
         // <table> with a styled <dl>. Reading only the table therefore finds nothing by
         // the time this runs -- read whichever is present.
-        const wFacts = {};
+        // record.js publishes what it consumed, because it also destroys it: the index
+        // layout removes the authored table, so reading the DOM here found nothing and
+        // the domain came back empty.
+        const wFacts = { ...(w.ttiFacts || {}) };
         w.querySelectorAll("table tr").forEach((tr) => {
           const c = tr.querySelectorAll("td, th");
           if (c.length < 2) return;
