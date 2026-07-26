@@ -591,10 +591,15 @@ export default apiInitializer("1.0", (api) => {
         try {
           const tc1 = api.container.lookup("controller:topic");
           if (post && post.post_number === 1 && tc1?.model?.title) {
-            const h = document.createElement("h1");
-            h.className = "ch-title";
-            h.textContent = tc1.model.title;
-            mast.prepend(h);
+            // record.js already renders the title on a unified record. Adding another
+            // here produced two <h1>s with identical text on every concept page --
+            // the same defect fixed on works, missed here.
+            if (w.dataset.wrap !== "tti") {
+              const h = document.createElement("h1");
+              h.className = "ch-title";
+              h.textContent = tc1.model.title;
+              mast.prepend(h);
+            }
             w.classList.add("curio-hero");
             const sib = w.nextElementSibling;
             if (sib && sib.id !== "curio-essay-label") {
