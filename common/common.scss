@@ -1512,19 +1512,19 @@ ul.entry-connected {
    Giving them one template put a film's poster sixth on its own page.
    ══════════════════════════════════════════════════════════════════════════ */
 
-/* ── CARD: works. Poster-led, the way every media database is. ── */
+/* ── CARD: works. Poster-led, the way every media database is. ──
+   The two columns live INSIDE the masthead. Building them from siblings of the wrap
+   meant the layout depended on what other renderers prepended, which put the title
+   and dek in the 132px poster column. */
 .d-wrap[data-wrap="tti"].record-card {
-  &.has-poster {
+  .entry-masthead.rc-split {
     display: grid;
-    grid-template-columns: 132px 1fr;
+    grid-template-columns: 132px minmax(0, 1fr);
     gap: 1.4em;
     align-items: start;
   }
 
   .rc-poster {
-    /* `span 3` invented two empty rows -- the wrap only holds the poster and the
-       masthead -- which left a tall gap between the card and the body prose. */
-    grid-row: 1;
     p { margin: 0; }
     img {
       width: 100%;
@@ -1534,12 +1534,13 @@ ul.entry-connected {
     }
   }
 
-  .entry-masthead { margin-bottom: 0; }
+  .rc-head { min-width: 0; }
   .entry-title { margin-top: 0.15em; }
+  .entry-dek { margin-top: 0.35em; }
 
   /* metadata as one inline row — five facts don't need five rows */
   .rc-meta {
-    margin-top: 0.7em;
+    margin-top: 0.8em;
     font-size: 0.9em;
     color: var(--primary-medium, #9aa0a6);
     line-height: 1.7;
@@ -1561,8 +1562,8 @@ ul.entry-connected {
 }
 
 @media (max-width: 700px) {
-  .d-wrap[data-wrap="tti"].record-card.has-poster {
-    grid-template-columns: 92px 1fr;
+  .d-wrap[data-wrap="tti"].record-card .entry-masthead.rc-split {
+    grid-template-columns: 84px minmax(0, 1fr);
     gap: 1em;
   }
 }

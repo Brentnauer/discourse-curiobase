@@ -342,18 +342,27 @@ export function renderRecord(el, post, api) {
     wrap.prepend(mast);
 
     if (layout === "card") {
-      // The poster IS the identity of a work. Lift it beside the title rather than
-      // leaving it below the prose, and render the facts as one inline row: five facts
-      // do not need five rows of a definition list.
+      // The poster IS the identity of a work, so it belongs beside the title.
+      //
+      // It is nested INSIDE the masthead rather than added as a sibling of it. The vault
+      // card renderer prepends the gravity plaques into this same wrap on a later pass,
+      // so any two-column grid built from siblings depends on child order and count --
+      // which is exactly how the title and dek ended up squeezed into the 132px poster
+      // column. A self-contained masthead cannot be disturbed by what lands around it.
       const poster =
         wrap.querySelector("img") ||
         wrap.closest(".cooked")?.querySelector("img");
       if (poster) {
+        const headCol = document.createElement("div");
+        headCol.className = "rc-head";
+        while (mast.firstChild) headCol.append(mast.firstChild);
+
         const fig = document.createElement("div");
         fig.className = "rc-poster";
         fig.append(poster.closest("p") || poster);
-        wrap.prepend(fig);
-        wrap.classList.add("has-poster");
+
+        mast.append(fig, headCol);
+        mast.classList.add("rc-split");
       }
       if (rows.length) {
         const line = document.createElement("div");
@@ -366,7 +375,7 @@ export function renderRecord(el, post, api) {
             while (valueCell.firstChild) span.append(valueCell.firstChild);
             line.append(span);
           });
-        mast.append(line);
+        (mast.querySelector(".rc-head") || mast).append(line);
       }
       table?.remove();
       // no freshness stamp on a work: a runtime does not go stale
