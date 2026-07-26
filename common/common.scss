@@ -1517,10 +1517,19 @@ ul.entry-connected {
    meant the layout depended on what other renderers prepended, which put the title
    and dek in the 132px poster column. */
 .d-wrap[data-wrap="tti"].record-card {
+  /* A card needs an edge. Without a background the poster, title and metadata read as
+     three loose elements, and the dead space beside the poster's lower half reads as a
+     gap rather than as padding. */
+  background: color-mix(in srgb, #{$vaultg} 5%, transparent);
+  border: 1px solid color-mix(in srgb, #{$vaultg} 22%, transparent);
+  border-radius: 6px;
+  padding: 1.1em 1.2em;
+  margin-bottom: 1.1em;
+
   .entry-masthead.rc-split {
     display: grid;
-    grid-template-columns: 132px minmax(0, 1fr);
-    gap: 1.4em;
+    grid-template-columns: 116px minmax(0, 1fr);
+    gap: 1.3em;
     align-items: start;
   }
 
@@ -1555,6 +1564,19 @@ ul.entry-connected {
     a { color: inherit; border-bottom: 1px solid color-mix(in srgb, currentColor 35%, transparent); }
   }
 }
+
+
+/* the gravity index belongs to the card it describes */
+.record-card + .curio-cardhead,
+.d-wrap[data-wrap="tti"].record-card ~ .curio-cardhead { margin-top: 0.2em; }
+
+.vault-entry .curio-cardhead {
+  margin-bottom: 0.55em;
+  .gp-zone { margin-top: 0; }
+}
+
+/* the trailer and body prose sit closer to the card than a full paragraph gap */
+.d-wrap[data-wrap="tti"].record-card + p { margin-top: 0.9em; }
 
 /* ── INDEX: concepts. Definition and what's filed here; no fact table. ── */
 .d-wrap[data-wrap="tti"].record-index {
