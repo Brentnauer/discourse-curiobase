@@ -658,20 +658,20 @@ export default apiInitializer("1.0", (api) => {
         head.className = "curio-cardhead";
         const meta = document.createElement("div");
         meta.className = "cc-meta";
-        if (!w.dataset.medium) {
+        if (!unified && !w.dataset.medium) {
           try {
             const cat = currentCategory(api);
             if (cat && cat.parent_category_id === settings.vault_id) w.dataset.medium = cat.name.toLowerCase();
           } catch {}
         }
-        [["medium", "Medium"], ["year", "Year"], ["creator", "Creator"], ["runtime", "Runtime"]].forEach(([k, label]) => {
+        (unified ? [] : [["medium", "Medium"], ["year", "Year"], ["creator", "Creator"], ["runtime", "Runtime"]]).forEach(([k, label]) => {
           if (!w.dataset[k]) return;
           const cell = document.createElement("div");
           cell.className = "cc-cell";
           cell.innerHTML = `<span class="cc-label">${label}</span><span class="cc-value">${decode(w.dataset[k])}</span>`;
           meta.append(cell);
         });
-        ["tmdb", "imdb"].forEach((k) => {
+        (unified ? [] : ["tmdb", "imdb"]).forEach((k) => {
           if (!w.dataset[k]) return;
           const a = document.createElement("a");
           a.className = "cc-ext";
@@ -686,10 +686,12 @@ export default apiInitializer("1.0", (api) => {
         try {
           const tc0 = api.container.lookup("controller:topic");
           if (post && post.post_number === 1 && tc0?.model?.title) {
-            const h = document.createElement("h1");
-            h.className = "vh-title";
-            h.textContent = tc0.model.title;
-            head.prepend(h);
+            if (!unified) {
+              const h = document.createElement("h1");
+              h.className = "vh-title";
+              h.textContent = tc0.model.title;
+              head.prepend(h);
+            }
             w.classList.add("vault-hero");
             // On a unified record the poster sits AFTER the wrap, not inside it, so
             // scoping this lookup to the wrap silently loses the hero background.
