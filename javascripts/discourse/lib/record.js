@@ -378,10 +378,22 @@ export function renderRecord(el, post, api) {
         line.className = "rc-meta";
         rows
           .filter((r) => r.label.toLowerCase() !== String(settings.label_entry_reviewed_key || "reviewed").toLowerCase())
-          .forEach(({ valueCell }) => {
+          .forEach(({ label, valueCell }) => {
             const span = document.createElement("span");
             span.className = "rc-fact";
             while (valueCell.firstChild) span.append(valueCell.firstChild);
+            // An external-database fact is authored as `| **IMDb** | tt0390384 |`, and
+            // the card drops labels -- so the row read "… 77 min · Fiction · tt0390384".
+            // A database key is not a fact about the film. When the whole value is one
+            // link, the LABEL is the readable thing, so use it as the link text. Works
+            // for TMDB, Letterboxd, Wikipedia — anything authored the same way.
+            const only = span.children.length === 1 && !span.textContent.replace(span.children[0].textContent, "").trim();
+            if (only && span.children[0].tagName === "A") {
+              span.children[0].textContent = label;
+              span.children[0].classList.add("rc-ext");
+              span.children[0].rel = "noopener";
+              span.children[0].target = "_blank";
+            }
             line.append(span);
           });
         (mast.querySelector(".rc-head") || mast).append(line);

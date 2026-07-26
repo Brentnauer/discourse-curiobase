@@ -434,7 +434,24 @@ export default apiInitializer("1.0", (api) => {
         zone.append(row);
       });
 
-      if (!existingZone) heroWrap.closest(".topic-post").after(zone);
+      if (!existingZone) {
+        // Mount INSIDE the post's body, not after the whole post.
+        //
+        // `.topic-post` is 914px wide; the text column inside it is 714px, because
+        // Discourse reserves a 45px avatar gutter on the left and ~156px for the
+        // timeline on the right. Appending after the post therefore made the page's
+        // content column visibly jump outward halfway down -- the section rule and
+        // every row overhung the record above them on both sides.
+        //
+        // Mounting into `.topic-body` inherits that column exactly, with no magic
+        // numbers to go stale when Discourse changes its layout.
+        const host = heroWrap.closest(".topic-post");
+        const body = host.querySelector(".topic-body");
+        const contents = body?.querySelector(".post__contents, .contents");
+        if (contents) contents.after(zone);
+        else if (body) body.append(zone);
+        else host.after(zone);
+      }
       let pending = 0;
       edges.forEach((e2) => {
         const raw = [...document.querySelectorAll(".topic-post")].find(

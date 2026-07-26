@@ -902,10 +902,15 @@ body.vault-entry, body.curio-entry {
 //
 // Test both states. A component that looks right until someone uses it is not styled.
 .curio-ballot .poll:has(.discourse-poll-number-results) {
+  // Core lays the poll out with NAMED grid areas -- the children carry
+  // `grid-area: poll | info | buttons`. Setting grid-template-columns alone did
+  // nothing to them: they kept their own rows and the vote button dropped to a
+  // second line. The areas have to be redeclared, not just the columns.
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto auto 1fr;
+  grid-template-areas: "poll info buttons";
   align-items: center;
-  gap: 0.8em;
+  gap: 0.9em;
   margin: 4px 0 0 !important;
 
   .poll-container { padding: 0 !important; margin: 0 !important; }
@@ -924,6 +929,8 @@ body.vault-entry, body.curio-entry {
   .poll-info {
     text-align: left;
     padding: 0 !important;
+    .poll-info_counts { margin: 0; }
+    .poll-info_counts-count { display: flex; align-items: baseline; gap: 0.35em; }
     .info-number { font-size: 0.95rem !important; color: var(--primary-medium, #9aa0a6); }
     .info-label { font-size: 0.62rem !important; letter-spacing: 0.1em; text-transform: uppercase; }
   }
@@ -931,10 +938,13 @@ body.vault-entry, body.curio-entry {
   // "Vote" here means "go back and change my answer" — a quiet link, not a CTA
   .poll-buttons {
     margin: 0;
+    padding: 0 !important;
+    border: 0 !important;
     opacity: 1;
     transform: none;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 0.3em;
     .toggle-results {
       background: transparent !important;
@@ -1109,10 +1119,27 @@ body.vault-entry .topic-post.curio-edge-post.pr-flash .curio-ballot {
 }
 
 
-// ── edge post reduced to its ballot (declarative: no JS timing dependency) ──
+// ── edge post reduced to its assessment and its ballot ──
+//
+// ⚠ This rule used to read `> *:not(.curio-ballot) { display: none }`, and it was
+// correct when a pairing post contained nothing but two polls. Then I wrote an
+// assessment into all 23 pairings -- into exactly the element this hides.
+//
+// The result was the precise inverse of what was needed: the prose was in the served
+// HTML, so a crawler read it, and every logged-in member saw two unexplained polls.
+// ErisC asked "what are each of the four options representing?" on a page where the
+// answer was present and hidden by one line of CSS.
+//
+// A CONTENT CHANGE CAN BE BROKEN BY CSS WRITTEN BEFORE THE CONTENT EXISTED. Blanket
+// `:not()` hides assume nothing will ever be added; something always is.
 body.vault-entry .post-stream .topic-post:has(.d-wrap[data-wrap="curio-gravity"]) {
   .cooked > p, .cooked > .cooked-selection-barrier { display: none !important; }
-  .d-wrap[data-wrap="curio-gravity"] > *:not(.curio-ballot) { display: none !important; }
+  .d-wrap[data-wrap="curio-gravity"] > *:not(.curio-ballot):not(p) { display: none !important; }
+  .d-wrap[data-wrap="curio-gravity"] > p {
+    margin: 0 0 0.7em;
+    color: var(--primary, #e8e6e3);
+    line-height: 1.55;
+  }
   .d-wrap[data-wrap="curio-gravity"] { border: 0 !important; padding: 0 !important; margin: 0 !important; }
   .topic-avatar, .topic-meta-data, .post-menu-area, .topic-map, .post-controls,
   .small-action, .embedded-posts { display: none !important; }
@@ -1616,7 +1643,10 @@ ul.entry-connected {
     display: grid;
     grid-template-columns: 210px minmax(0, 1fr);
     gap: 1.5em;
-    align-items: start;
+    /* stretch, not start: a 210px poster is taller than the title and dek, and with
+       `start` the gap beside its lower half reads as a hole rather than as layout.
+       The fact row is pushed to the poster's baseline instead. */
+    align-items: stretch;
     margin-bottom: 0;
   }
 
@@ -1638,9 +1668,17 @@ ul.entry-connected {
     }
   }
 
-  .rc-head { min-width: 0; }
+  .rc-head {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
 
-  .entry-type { background: rgba(255, 255, 255, 0.82); color: #0b1013; }
+  .entry-type {
+    background: rgba(255, 255, 255, 0.82);
+    color: #0b1013;
+    align-self: flex-start;
+  }
 
   .entry-title {
     margin: 0.34em 0 0;
@@ -1657,9 +1695,10 @@ ul.entry-connected {
     max-width: 42em;
   }
 
-  /* metadata as one inline row — five facts don't need five rows */
+  /* metadata as one inline row — five facts don't need five rows.
+     `margin-top: auto` sits it on the poster's baseline; see the note on the grid. */
   .rc-meta {
-    margin-top: 1em;
+    margin-top: auto;
     padding-top: 0.85em;
     border-top: 1px solid rgba(255, 255, 255, 0.14);
     font-size: 0.86em;
@@ -1674,6 +1713,8 @@ ul.entry-connected {
     }
     &:last-child::after { content: ""; }
     a { color: inherit; border-bottom: 1px solid color-mix(in srgb, currentColor 35%, transparent); }
+    /* an external database is a destination, not a value — mark it as one */
+    a.rc-ext::after { content: " ↗"; opacity: 0.7; }
   }
 
   /* record.js empties this when it consumes the authored fact table; an empty block
