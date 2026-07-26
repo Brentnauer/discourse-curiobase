@@ -344,7 +344,7 @@ export default apiInitializer("1.0", (api) => {
       const ctrl = api.container.lookup("controller:topic");
       const model = ctrl?.model;
       const posts = model?.postStream?.posts || [];
-      const heroWrap = document.querySelector('.d-wrap[data-wrap="curio-card"]');
+      const heroWrap = document.querySelector('.d-wrap[data-wrap="tti"][data-type="work"], .d-wrap[data-wrap="curio-card"]');
       if (!stream || !posts.length || !heroWrap) return tries <= 0;
       const existingZone = document.getElementById("curio-positions");
       if (existingZone && existingZone.dataset.complete === "1") return true;
@@ -382,7 +382,7 @@ export default apiInitializer("1.0", (api) => {
             const cj = await fetchJson(`/t/${ct.id}.json`);
             const h = document.createElement("div");
             h.innerHTML = cj.post_stream.posts[0].cooked;
-            const cw = h.querySelector('.d-wrap[data-wrap="curio-concept"]');
+            const cw = h.querySelector('.d-wrap[data-wrap="tti"][data-type="concept"], .d-wrap[data-wrap="curio-concept"]');
             const dekAttr = cw ? decode(cw.dataset.dek || "") : "";
             const p1 = [...h.querySelectorAll("p")].find((p) => p.textContent.trim().length > 60);
             if (!dekAttr && !p1) return;
@@ -512,15 +512,34 @@ export default apiInitializer("1.0", (api) => {
       }
 
       // ── concept entry: masthead + self-populating gallery + grid ──
-      el.querySelectorAll('.d-wrap[data-wrap="curio-concept"]').forEach(async (w) => {
+      el.querySelectorAll('.d-wrap[data-wrap="tti"][data-type="concept"], .d-wrap[data-wrap="curio-concept"]').forEach(async (w) => {
         if (w.querySelector(".curio-masthead")) return;
+        // A unified record keeps its facts in the markdown table and its relationships in
+        // tags. Read the table first, fall back to the legacy attributes.
+        const wFacts = {};
+        w.querySelectorAll("table tr").forEach((tr) => {
+          const c = tr.querySelectorAll("td, th");
+          if (c.length < 2) return;
+          const k = (c[0].textContent || "").trim().toLowerCase();
+          const v = (c[1].textContent || "").trim();
+          if (k && v) wFacts[k] = v;
+        });
+        const conceptSlug = decode(w.dataset.slug || w.dataset.concept || "");
+        const relatedTags = (() => {
+          if (w.dataset.related) return decode(w.dataset.related).split(",");
+          try {
+            const tags = api.container.lookup("controller:topic")?.model?.tags || [];
+            return tags.filter((t) => t !== conceptSlug);
+          } catch { return []; }
+        })();
+
         const mast = document.createElement("div");
         mast.className = "curio-masthead";
         const dom = document.createElement("span");
         dom.className = "cm-domain";
-        dom.textContent = decode(w.dataset.domain || "");
+        dom.textContent = wFacts.domain || decode(w.dataset.domain || "");
         mast.append(dom);
-        (decode(w.dataset.related || "")).split(",").filter(Boolean).forEach((slug) => {
+        relatedTags.filter(Boolean).forEach((slug) => {
           const a = document.createElement("a");
           a.className = "cm-related";
           a.href = `/tag/${slug.trim()}`;
@@ -547,8 +566,8 @@ export default apiInitializer("1.0", (api) => {
           }
         } catch {}
 
-        if (post && post.post_number === 1 && w.dataset.concept) {
-          const slug = decode(w.dataset.concept);
+        if (post && post.post_number === 1 && conceptSlug) {
+          const slug = conceptSlug;
           const works = await conceptWorks(slug);
           if (works.length) {
             w.append(buildGrid(works));
@@ -588,8 +607,12 @@ export default apiInitializer("1.0", (api) => {
       });
 
       // ── vault card ──
-      el.querySelectorAll('.d-wrap[data-wrap="curio-card"]').forEach((w) => {
+      el.querySelectorAll('.d-wrap[data-wrap="tti"][data-type="work"], .d-wrap[data-wrap="curio-card"]').forEach((w) => {
         if (w.querySelector(".curio-cardhead")) return;
+        // On a unified record the header (badge, title, dek, fact strip) is already
+        // drawn by record.js from the markdown table. Only the hero treatment and the
+        // gravity plaques are still wanted here.
+        const unified = w.dataset.wrap === "tti";
         const head = document.createElement("div");
         head.className = "curio-cardhead";
         const meta = document.createElement("div");
@@ -627,7 +650,9 @@ export default apiInitializer("1.0", (api) => {
             h.textContent = tc0.model.title;
             head.prepend(h);
             w.classList.add("vault-hero");
-            const img = w.querySelector("img");
+            // On a unified record the poster sits AFTER the wrap, not inside it, so
+            // scoping this lookup to the wrap silently loses the hero background.
+            const img = w.querySelector("img") || w.closest(".cooked")?.querySelector("img");
             if (img) w.style.setProperty("--vh-bg", `url(${img.getAttribute("src")})`);
           }
         } catch {}
