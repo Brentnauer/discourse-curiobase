@@ -176,3 +176,6 @@ label_entry_reviewed:
 label_entry_reviewed_key:
   type: string
   default: "Reviewed"
+label_entry_needs_cta:
+  type: string
+  default: "Reply with what you know"

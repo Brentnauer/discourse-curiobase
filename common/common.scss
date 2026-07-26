@@ -1397,3 +1397,47 @@ ul.entry-connected {
   }
   ul.entry-connected .ec-kind { display: block; min-width: 0; }
 }
+
+/* ── needs: each open item is a reply prompt, not a tick target ──
+   Ticking means "this gap is filled", which is only true after the entry is edited.
+   The button is the member's action; the checkbox is the staff absorption action. */
+.d-wrap[data-wrap="entry-needs"] {
+  .entry-needs-head.en-authored {
+    font-size: 0.76em;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: $entry;
+    margin: 0 0 0.45em;
+    display: flex;
+    align-items: baseline;
+    gap: 0.7em;
+  }
+
+  button.en-ask {
+    background: none;
+    border: 0;
+    padding: 0.1em 0;
+    margin: 0;
+    font: inherit;
+    color: var(--primary, #e8e6e3);
+    text-align: left;
+    cursor: pointer;
+    border-bottom: 1px dashed color-mix(in srgb, #{$entry} 55%, transparent);
+    transition: color 0.12s, border-color 0.12s;
+
+    &:hover,
+    &:focus-visible {
+      color: $entry;
+      border-bottom-style: solid;
+      border-bottom-color: $entry;
+    }
+    &:focus-visible { outline: 2px solid $entry; outline-offset: 3px; }
+  }
+
+  /* the checkbox stays, but recedes — it is not the reader's job */
+  .chcklst-box {
+    opacity: 0.5;
+    margin-right: 0.15em;
+  }
+}

@@ -76,23 +76,56 @@ function buildFactStrip(rows, reviewedLabel) {
   return { strip, reviewed };
 }
 
-// ── needs list: the checklist plugin owns the boxes, we own the frame ──
-function decorateNeeds(wrap) {
-  if (wrap.querySelector(".entry-needs-head")) return;
+// ── needs list ──
+//
+// The affordance problem this solves: a checkbox invites the reader to TICK, but ticking
+// means "this gap is now filled", which is only true if they also edited the entry. A
+// member who knows the answer would tick (easy, and leaves the entry no better) instead of
+// replying (useful). So the tick is left as the staff absorption action, and each open need
+// becomes a button that opens a reply with the need quoted. Contribution = posting, which
+// is the behaviour the whole system is built on.
+function openReplyFor(api, needText) {
+  try {
+    const topic = api.container.lookup("controller:topic")?.model;
+    const composer = api.container.lookup("service:composer");
+    if (!topic || !composer) return false;
+    composer.open({
+      action: "reply",
+      topic,
+      draftKey: topic.draft_key,
+      draftSequence: topic.draft_sequence,
+      topicBody: `> ${needText}\n\n`,
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function decorateNeeds(wrap, api) {
+  if (wrap.dataset.entryNeedsDone === "1") return;
+  wrap.dataset.entryNeedsDone = "1";
 
   const boxes = [...wrap.querySelectorAll(".chcklst-box")];
-  const done = boxes.filter(
-    (b) => b.classList.contains("checked") || b.classList.contains("permanent")
-  ).length;
+  const isDone = (b) => b.classList.contains("checked") || b.classList.contains("permanent");
+  const done = boxes.filter(isDone).length;
   const open = boxes.length - done;
 
-  const head = document.createElement("div");
-  head.className = "entry-needs-head";
-
-  const h = document.createElement("span");
-  h.className = "en-title";
-  h.textContent = open > 0 ? settings.label_entry_needs : settings.label_entry_complete;
-  head.append(h);
+  // Prefer a heading the author wrote (it is visible without JavaScript); fall back to ours.
+  let head = [...wrap.children].find(
+    (n) => n.tagName === "P" && n.textContent.trim() && !n.querySelector("ul, li")
+  );
+  if (head) {
+    head.classList.add("entry-needs-head", "en-authored");
+  } else {
+    head = document.createElement("div");
+    head.className = "entry-needs-head";
+    const h = document.createElement("span");
+    h.className = "en-title";
+    h.textContent = open > 0 ? settings.label_entry_needs : settings.label_entry_complete;
+    head.append(h);
+    wrap.prepend(head);
+  }
 
   if (boxes.length) {
     const count = document.createElement("span");
@@ -101,11 +134,40 @@ function decorateNeeds(wrap) {
     head.append(count);
   }
 
+  // turn each open need into a reply prompt
+  boxes.forEach((box) => {
+    const li = box.closest("li");
+    if (!li || isDone(box) || li.querySelector(".en-ask")) return;
+    const label = (li.textContent || "").trim();
+    if (!label) return;
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "en-ask";
+    btn.textContent = label;
+    btn.title = settings.label_entry_needs_cta || "Reply with this";
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (!openReplyFor(api, label)) {
+        // composer unavailable — send them to the reply button rather than failing silently
+        document.querySelector(".topic-footer-main-buttons .create")?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    });
+
+    // replace the text nodes after the checkbox with the button
+    [...li.childNodes].forEach((n) => {
+      if (n !== box) n.remove();
+    });
+    li.append(btn);
+  });
+
   wrap.classList.toggle("entry-needs-open", open > 0);
   wrap.classList.toggle("entry-needs-done", open === 0 && boxes.length > 0);
-  wrap.prepend(head);
 
-  if (open > 0 && settings.label_entry_needs_hint) {
+  if (open > 0 && settings.label_entry_needs_hint && !wrap.querySelector(".en-hint")) {
     const hint = document.createElement("div");
     hint.className = "en-hint";
     hint.textContent = settings.label_entry_needs_hint;
@@ -135,12 +197,16 @@ function decorateConnected(root) {
 function injectJsonLd(wrap, { type, title, dek, facts, url }) {
   if (wrap.querySelector("script.entry-jsonld")) return;
   const info = typeInfo(type);
+  const slug = decode(wrap.dataset.slug || "");
   const data = {
     "@context": "https://schema.org",
     "@type": info.schema,
     name: title,
     url,
   };
+  // the slug is the entry's permanent key — use it as the stable @id so cross-references
+  // survive retitling, which is the whole reason the slug exists
+  if (slug) data["@id"] = `${window.location.origin}/entry/${slug}`;
   if (dek) data.description = dek;
 
   // Machine-readable dates come from optional ISO attributes on the wrap, never from the
@@ -170,13 +236,14 @@ function injectJsonLd(wrap, { type, title, dek, facts, url }) {
 
 // ── the whole entry surface, called from decorateCookedElement ──
 export function renderEntry(el, post, api) {
-  el.querySelectorAll('.d-wrap[data-wrap="entry-needs"]').forEach(decorateNeeds);
+  el.querySelectorAll('.d-wrap[data-wrap="entry-needs"]').forEach((w) => decorateNeeds(w, api));
 
   el.querySelectorAll('.d-wrap[data-wrap="entry"]').forEach((wrap) => {
     if (wrap.querySelector(".entry-masthead")) return;
 
     const type = decode(wrap.dataset.type || "");
     const dek = decode(wrap.dataset.dek || "");
+    let dekText = dek;
     const info = typeInfo(type);
     const isFirst = post && post.post_number === 1;
 
@@ -204,7 +271,20 @@ export function renderEntry(el, post, api) {
       }
     } catch {}
 
-    if (dek) {
+    // The dek should be the FIRST content in the post, authored as a real paragraph.
+    // Discourse builds the meta description and og:description from the start of the cooked
+    // post -- so if the fact table comes first, the Google snippet is
+    // "When 26-28 December 1980 Where Rendlesham Forest, Suffolk - between RAF..." which is
+    // useless. An authored paragraph is preferred and hoisted into the masthead; the dek=
+    // attribute stays supported as a fallback for entries not yet migrated.
+    const authoredDek = [...wrap.children].find(
+      (n) => n.tagName === "P" && n.textContent.trim()
+    );
+    if (authoredDek) {
+      dekText = authoredDek.textContent.trim();
+      authoredDek.classList.add("entry-dek");
+      mast.append(authoredDek);
+    } else if (dek) {
       const d = document.createElement("p");
       d.className = "entry-dek";
       d.textContent = dek;
@@ -228,7 +308,7 @@ export function renderEntry(el, post, api) {
       injectJsonLd(wrap, {
         type,
         title,
-        dek,
+        dek: dekText,
         facts: rows,
         url: window.location.origin + window.location.pathname,
       });

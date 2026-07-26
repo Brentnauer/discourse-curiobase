@@ -132,8 +132,9 @@ template. They are identified by the wrap and the `entry-*` tag, **never by cate
 
 ```
 [wrap=entry type="event" slug="rendlesham-forest-incident"
-            start="1980-12-26" end="1980-12-28"
-            dek="One sentence a stranger could repeat back to you."]
+            start="1980-12-26" end="1980-12-28"]
+
+One sentence a stranger could repeat back to you.
 
 |  |  |
 |---|---|
@@ -155,14 +156,30 @@ Prose. Reports what sources say; does not adjudicate.
 - **Concept** — [UAP & Phenomena](/t/uap-phenomena/19616)
 
 [wrap=entry-needs]
+
+**This entry still needs**
+
 - [ ] the exact date the memo was filed
 - [ ] a photograph from the period
+
 [/wrap]
 ```
 
 **The fact table is authored as real markdown on purpose.** It renders server-side as a real
 `<table>` that a crawler reads; the component swaps in a styled `<dl>`. If the JavaScript never
 loads, the facts are still there. The `Reviewed` row is pulled out and shown as a freshness stamp.
+
+**The first paragraph is the dek, and it must be real prose inside the wrap.** Discourse builds
+`meta description` and `og:description` from the start of the cooked post. Author it as a `dek=`
+attribute and the Google snippet becomes *"When 26–28 December 1980 Where Rendlesham Forest,
+Suffolk — between RAF…"*, which is useless. The attribute is still read as a fallback, but prose
+wins. The component hoists it into the masthead either way.
+
+**Each open need renders as a button that opens a reply**, not as something to tick. Ticking means
+*"this gap is filled"*, which is only true once the entry itself has been edited — so a member who
+knows the answer would tick (easy, entry no better) rather than reply (useful). The checkbox stays
+for staff to mark absorbed. Author a `**This entry still needs**` line inside the wrap so it reads
+correctly without JavaScript.
 
 `start` / `end` are **optional ISO dates, used only for the JSON-LD.** They are not read from
 the fact table (`26–28 December 1980` is not a schema.org date) and cannot be read from the
