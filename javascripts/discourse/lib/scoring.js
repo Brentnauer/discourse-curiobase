@@ -20,7 +20,11 @@ async function conceptWorks(conceptSlug) {
   let works = [];
   try {
     const feed = await fetchJson(`/tags/c/the-vault/${settings.vault_id}/${conceptSlug}.json`);
-    const topics = (feed.topic_list?.topics || []).slice(0, 24);
+    // Filter BEFORE the cap: Screening Room is discussion, not works, and letting it
+    // through both wasted a topic fetch per thread and could push real works past the 24.
+    const topics = (feed.topic_list?.topics || [])
+      .filter((t) => t.category_id !== settings.screening_id)
+      .slice(0, 24);
     const pollSuffix = conceptSlug.replace(/-/g, "_");
     const results = await Promise.all(topics.map(async (t) => {
       try {

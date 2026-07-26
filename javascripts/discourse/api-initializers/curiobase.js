@@ -122,7 +122,10 @@ export default apiInitializer("1.0", (api) => {
         (async () => {
           try {
             const feed = await fetchJson(`/tags/c/the-vault/${settings.vault_id}/${slug}.json`);
-            const n = (feed.topic_list?.topics || []).length;
+            // Screening Room lives inside the Vault but holds discussion, not works.
+            // Counting it made the index advertise works the concept page won't render.
+            const n = (feed.topic_list?.topics || [])
+              .filter((t) => t.category_id !== settings.screening_id).length;
             const meta = a.querySelector(".ca-meta");
             meta.textContent = n === 0 ? settings.label_noworks_short
               : `${n} ${n === 1 ? settings.label_work : settings.label_works}`;
