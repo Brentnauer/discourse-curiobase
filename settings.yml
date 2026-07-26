@@ -182,3 +182,12 @@ label_entry_index_empty:
 label_entry_contributions:
   type: string
   default: "contributions"
+entry_gap_reaction:
+  type: string
+  default: "mag"
+label_entry_gap_one:
+  type: string
+  default: "1 member has flagged this entry as needing a source."
+label_entry_gap_many:
+  type: string
+  default: "%{count} members have flagged this entry as needing a source."

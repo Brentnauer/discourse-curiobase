@@ -102,7 +102,17 @@ function openReplyFor(api, needText) {
   }
 }
 
-function decorateNeeds(wrap, api) {
+// A 🔍 reaction on the entry means "this needs a source" — a gap raised by the
+// community rather than by staff. It is deliberately excluded from the like set
+// site-wide, so flagging a gap is not scored as endorsement and does not feed
+// trust-level progress. Counts arrive preloaded with the topic; no extra request.
+function communityGapCount(post) {
+  const want = (settings.entry_gap_reaction || "mag").trim();
+  const hit = (post?.reactions || []).find((r) => r.id === want);
+  return hit ? hit.count : 0;
+}
+
+function decorateNeeds(wrap, api, post) {
   if (wrap.dataset.entryNeedsDone === "1") return;
   wrap.dataset.entryNeedsDone = "1";
 
@@ -173,6 +183,17 @@ function decorateNeeds(wrap, api) {
     hint.textContent = settings.label_entry_needs_hint;
     wrap.append(hint);
   }
+
+  // community-raised gaps sit alongside the authored ones
+  const gaps = communityGapCount(post);
+  if (gaps > 0 && !wrap.querySelector(".en-gap")) {
+    const g = document.createElement("div");
+    g.className = "en-gap";
+    g.textContent = (
+      gaps === 1 ? settings.label_entry_gap_one : settings.label_entry_gap_many
+    ).replace("%{count}", gaps);
+    wrap.append(g);
+  }
 }
 
 // ── connected: turn the authored list into chips, keeping every link intact ──
@@ -236,7 +257,7 @@ function injectJsonLd(wrap, { type, title, dek, facts, url }) {
 
 // ── the whole entry surface, called from decorateCookedElement ──
 export function renderEntry(el, post, api) {
-  el.querySelectorAll('.d-wrap[data-wrap="entry-needs"]').forEach((w) => decorateNeeds(w, api));
+  el.querySelectorAll('.d-wrap[data-wrap="entry-needs"]').forEach((w) => decorateNeeds(w, api, post));
 
   el.querySelectorAll('.d-wrap[data-wrap="entry"]').forEach((wrap) => {
     if (wrap.querySelector(".entry-masthead")) return;

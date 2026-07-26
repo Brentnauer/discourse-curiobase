@@ -1471,3 +1471,13 @@ ul.entry-connected {
   display: inline-block;
   margin-bottom: 0.15em;
 }
+
+/* community-raised gap: a 🔍 reaction, not a staff decision */
+.d-wrap[data-wrap="entry-needs"] .en-gap {
+  margin-top: 0.6em;
+  padding-top: 0.55em;
+  border-top: 1px dashed color-mix(in srgb, #{$entry} 30%, transparent);
+  font-size: 0.84em;
+  color: $entry;
+  &::before { content: "🔍 "; }
+}
