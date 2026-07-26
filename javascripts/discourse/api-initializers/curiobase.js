@@ -76,7 +76,9 @@ export default apiInitializer("1.0", (api) => {
       if (!b.classList.contains("vault-entry") && !b.classList.contains("curio-entry")) return true;
       const posts = [...document.querySelectorAll(".topic-post")];
       if (!posts.length) return n <= 0 ? true : false;
-      const isEntry = (el) => el.querySelector('.d-wrap[data-wrap="curio-card"], .d-wrap[data-wrap="curio-gravity"], .d-wrap[data-wrap="curio-concept"]');
+      // `entry` and `entry-needs` belong here too: without them the divider decides the
+      // entry itself is "discussion" and drops a DISCUSSION rule above the first post.
+      const isEntry = (el) => el.querySelector('.d-wrap[data-wrap="curio-card"], .d-wrap[data-wrap="curio-gravity"], .d-wrap[data-wrap="curio-concept"], .d-wrap[data-wrap="entry"], .d-wrap[data-wrap="entry-needs"]');
       const firstDiscussion = posts.find((p) => !isEntry(p));
       if (firstDiscussion) {
         const div = document.createElement("div");
