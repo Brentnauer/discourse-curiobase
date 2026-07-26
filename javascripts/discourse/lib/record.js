@@ -285,7 +285,6 @@ export function renderRecord(el, post, api) {
     const isFirst = post && post.post_number === 1;
 
     const { table, rows } = readFacts(wrap);
-    const { strip, reviewed } = buildFactStrip(rows, settings.label_entry_reviewed_key);
 
     const mast = document.createElement("div");
     mast.className = "entry-masthead";
@@ -376,6 +375,10 @@ export function renderRecord(el, post, api) {
       // The domain already appears in the masthead.
       table?.remove();
     } else {
+      // Built HERE, not earlier: buildFactStrip moves the value nodes into the <dd>, so
+      // calling it before the layout branch left the card reading emptied cells and
+      // rendering a row of bare separators.
+      const { strip, reviewed } = buildFactStrip(rows, settings.label_entry_reviewed_key);
       if (table) table.replaceWith(strip);
       if (reviewed) {
         const r = document.createElement("div");

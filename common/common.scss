@@ -1522,7 +1522,9 @@ ul.entry-connected {
   }
 
   .rc-poster {
-    grid-row: 1 / span 3;
+    /* `span 3` invented two empty rows -- the wrap only holds the poster and the
+       masthead -- which left a tall gap between the card and the body prose. */
+    grid-row: 1;
     p { margin: 0; }
     img {
       width: 100%;
