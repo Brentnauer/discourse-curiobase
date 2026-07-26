@@ -1217,34 +1217,37 @@ body.vault-entry .post-stream .topic-post.pr-flash:has(.d-wrap[data-wrap="curio-
 
 $entry: #7f8fa6;
 
+/* Type badge — deliberately NOT nested inside the entry wrap. It is used on the entry
+   page AND in the entries index, and scoping it to the wrap silently left the index
+   rendering plain text. */
+.entry-type {
+  display: inline-block;
+  font-size: 0.68em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  padding: 0.22em 0.62em;
+  border-radius: 2px;
+  color: #0d0f11;
+  background: $entry;
+  vertical-align: middle;
+}
+
+/* one accent per type — the badge is the only place colour carries meaning */
+.et-event   { background: #c9a227; }
+.et-person  { background: #8fb08a; }
+.et-place   { background: #7fa8c9; }
+.et-object  { background: #b98f6d; }
+.et-org     { background: #a48fb0; }
+.et-claim   { background: #c98f8f; }
+.et-concept { background: #2aa79b; }
+.et-work    { background: #9aa0a6; }
+
 .d-wrap[data-wrap="entry"] {
   margin: 0 0 1.4em;
 
   .entry-masthead {
     margin-bottom: 0.9em;
   }
-
-  .entry-type {
-    display: inline-block;
-    font-size: 0.68em;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    padding: 0.22em 0.62em;
-    border-radius: 2px;
-    color: #0d0f11;
-    background: $entry;
-    vertical-align: middle;
-  }
-
-  /* one accent per type — the badge is the only place colour carries meaning */
-  .et-event  { background: #c9a227; }
-  .et-person { background: #8fb08a; }
-  .et-place  { background: #7fa8c9; }
-  .et-object { background: #b98f6d; }
-  .et-org    { background: #a48fb0; }
-  .et-claim  { background: #c98f8f; }
-  .et-concept { background: #2aa79b; }
-  .et-work   { background: #9aa0a6; }
 
   .entry-title {
     margin: 0.34em 0 0.1em;
@@ -1508,4 +1511,10 @@ ul.entry-connected {
 
 @media (max-width: 700px) {
   #entry-index .ei-contrib { margin-left: 0; }
+}
+
+/* index: give the badge room to breathe as a group header */
+#entry-index .ei-group > .entry-type {
+  display: inline-block;
+  margin-bottom: 0.15em;
 }
