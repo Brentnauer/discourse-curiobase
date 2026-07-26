@@ -34,7 +34,7 @@ export function tagSlugFromRoute() {
 //
 // Fast path: the concept topic's own slug usually equals the tag. Verify by reading the
 // record's data-slug, because a topic slug is derived from the title and can drift.
-async function findConcept(tagSlug) {
+export async function findConcept(tagSlug) {
   if (conceptCache.has(tagSlug)) return conceptCache.get(tagSlug);
   let found = null;
   try {

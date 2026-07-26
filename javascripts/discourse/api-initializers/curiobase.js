@@ -25,7 +25,7 @@ import {
 } from "../lib/scoring";
 
 import { renderRecord, applyRecordBodyClass, buildEntryIndex } from "../lib/record";
-import { mountTagConcept, clearTagConcept } from "../lib/tagconcept";
+import { mountTagConcept, clearTagConcept, findConcept } from "../lib/tagconcept";
 
 export default apiInitializer("1.0", (api) => {
   api.onPageChange(() => {
@@ -396,17 +396,13 @@ export default apiInitializer("1.0", (api) => {
         const exp = row.querySelector(".pr-expand");
         (async () => {
           try {
-            const feed = await fetchJson(`/tags/c/curiobase/${settings.curiobase_id}/${e.slug}.json`);
-            const ct = (feed.topic_list?.topics || []).find((t) => t.category_id !== settings.nominations_id);
-            if (!ct) return;
-            const cj = await fetchJson(`/t/${ct.id}.json`);
-            const h = document.createElement("div");
-            h.innerHTML = cj.post_stream.posts[0].cooked;
-            const cw = h.querySelector('.d-wrap[data-wrap="tti"][data-type="concept"], .d-wrap[data-wrap="curio-concept"]');
-            const dekAttr = cw ? decode(cw.dataset.dek || "") : "";
-            const p1 = [...h.querySelectorAll("p")].find((p) => p.textContent.trim().length > 60);
-            if (!dekAttr && !p1) return;
-            let txt = dekAttr || p1.textContent.trim().replace(/\s+/g, " ");
+            // Must match the concept that OWNS this slug, not the first topic tagged with
+            // it. Concepts now carry each other's tags (related concepts became tags), so
+            // the old `.find()` returned whichever concept was most recently active --
+            // which put Non-Linear Time's definition under the Causal Loop row.
+            const concept = await findConcept(e.slug);
+            if (!concept?.dek) return;
+            let txt = concept.dek.replace(/\s+/g, " ");
             if (txt.length > 190) txt = txt.slice(0, 187) + "…";
             exp.innerHTML = `<div class="pr-dek">${txt}</div>`;
           } catch {}
