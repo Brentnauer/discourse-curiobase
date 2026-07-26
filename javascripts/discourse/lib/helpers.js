@@ -99,6 +99,49 @@ async function fetchJson(url) {
 }
 
 
+// ── read a record out of a cooked post, whatever vocabulary it was authored in ──
+//
+// Facts now live in a markdown table (visible to crawlers) rather than in data-*
+// attributes (invisible). Both are read here so scoring keeps working on posts that
+// have not been converted yet — converting a post must never break its scoring.
+//
+// Returns lowercased fact keys, so `| **Medium** | Film |` and `medium="film"` both
+// arrive as `medium`.
+function readRecord(scope) {
+  const wrap = scope.querySelector(
+    '.d-wrap[data-wrap="tti"], .d-wrap[data-wrap="curio-card"], .d-wrap[data-wrap="entry"]'
+  );
+  if (!wrap) return null;
+
+  const facts = {};
+  // legacy attributes first, so the table can override them
+  Object.entries(wrap.dataset || {}).forEach(([k, v]) => {
+    if (k !== "wrap") facts[k.toLowerCase()] = decode(v || "");
+  });
+
+  const table = wrap.querySelector("table");
+  if (table) {
+    [...table.querySelectorAll("tr")].forEach((tr) => {
+      const cells = tr.querySelectorAll("td, th");
+      if (cells.length < 2) return;
+      const key = (cells[0].textContent || "").trim().replace(/[:：]\s*$/, "").toLowerCase();
+      const val = (cells[1].textContent || "").trim();
+      if (key && val) facts[key] = val;
+    });
+  }
+
+  // the poster may sit inside the wrap (legacy) or after it (unified record)
+  const img = wrap.querySelector("img") || scope.querySelector("img");
+
+  return {
+    wrap,
+    type: decode(wrap.dataset.type || ""),
+    slug: decode(wrap.dataset.slug || ""),
+    facts,
+    poster: img?.getAttribute("src") || null,
+  };
+}
+
 export {
   cache,
   decode,
@@ -113,4 +156,5 @@ export {
   tierColor,
   prettify,
   fetchJson,
+  readRecord,
 };

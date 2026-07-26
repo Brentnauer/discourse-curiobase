@@ -221,6 +221,21 @@ The body. Then media, then anything else.
 | **Body** | the essay, the document, the description |
 | **Derived views** | works grid, witness register, needs list, Related Topics |
 
+### Scoring works across both vocabularies
+
+A **pairing** is still a reply carrying `[wrap=curio-gravity]` and two polls — that is a different
+kind of thing from a record and keeps its own wrap.
+
+What changed is how the concept page reads the *work* it is scoring. `readRecord()` in `helpers.js`
+pulls facts from **either** vocabulary: the unified record's markdown table, or a legacy
+`curio-card`'s `data-*` attributes, with the table winning where both exist. It also finds the poster
+whether it sits inside the wrap (legacy) or after it (unified).
+
+**This matters because converting a work must never silently drop it out of the grid.** Before the
+fix, converting Primer left `conceptWorks` unable to find its card at all — it fell back to a bare
+topic title with no year, medium or poster, and nothing would have reported the loss. Verified after
+the fix: all four Causal Loop works resolve identically, one unified and three legacy.
+
 ### Relationships are not authored
 
 **Do not write "Connected" lists.** Tag the record instead. Discourse derives the rest:

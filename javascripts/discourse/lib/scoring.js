@@ -5,6 +5,7 @@
 import {
   cache,
   decode,
+  readRecord,
   pollScale,
   pollMean,
   miniGrid,
@@ -32,7 +33,11 @@ async function conceptWorks(conceptSlug) {
         const posts = tj.post_stream.posts || [];
         const first = document.createElement("div");
         first.innerHTML = posts[0]?.cooked || "";
-        const card = first.querySelector('.d-wrap[data-wrap="curio-card"]');
+        // reads either vocabulary: the unified [wrap=tti] record with its markdown fact
+        // table, or a legacy curio-card with data-* attributes. Converting a work must
+        // never silently drop it out of the grid.
+        const rec = readRecord(first);
+        const f = rec?.facts || {};
         let grav = null, gpost = null;
         for (const p of posts) {
           const h = document.createElement("div");
@@ -51,9 +56,9 @@ async function conceptWorks(conceptSlug) {
           slug: t.slug,
           post_number: gpost.post_number,
           body: bodyHtml,
-          title: card ? decode(card.dataset.title || t.title) : t.title,
-          year: card ? decode(card.dataset.year || "") : "",
-          poster: card?.querySelector("img")?.getAttribute("src") || null,
+          title: f.title || t.title,
+          year: f.year || "",
+          poster: rec?.poster || null,
           ex: NaN, ey: NaN,
           tier: decode(grav.dataset.tier || ""),
           excerpt: excerpt.length > 150 ? excerpt.slice(0, 147) + "…" : excerpt,
@@ -61,8 +66,8 @@ async function conceptWorks(conceptSlug) {
           cx: px && py && Math.min(px.voters, py.voters) >= settings.min_voters ? px.mean : null,
           cy: px && py && Math.min(px.voters, py.voters) >= settings.min_voters ? py.mean : null,
           voters: Math.min(px?.voters || 0, py?.voters || 0),
-          medium: card ? decode(card.dataset.medium || "") : "",
-          mode: card ? (decode(card.dataset.mode || "") || "fiction") : "fiction",
+          medium: f.medium || "",
+          mode: (f.mode || "fiction").toLowerCase(),
         };
       } catch { return null; }
     }));
