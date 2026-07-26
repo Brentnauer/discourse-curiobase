@@ -44,7 +44,10 @@ function readFacts(wrap) {
       if (cells.length < 2) return null;
       const label = (cells[0].textContent || "").trim().replace(/[:：]\s*$/, "");
       if (!label) return null;
-      return { label, valueCell: cells[1] };
+      // capture `text` NOW: buildFactStrip moves these nodes into the <dd>, after which
+      // valueCell is empty. Reading it later silently yields "" -- which is how the
+      // JSON-LD shipped without startDate or location the first time.
+      return { label, valueCell: cells[1], text: (cells[1].textContent || "").trim() };
     })
     .filter(Boolean);
   return { table, rows };
@@ -140,15 +143,21 @@ function injectJsonLd(wrap, { type, title, dek, facts, url }) {
   };
   if (dek) data.description = dek;
 
-  facts.forEach(({ label, valueCell }) => {
-    const text = (valueCell.textContent || "").trim();
+  // Machine-readable dates come from optional ISO attributes on the wrap, never from the
+  // prose in the fact table ("26–28 December 1980" is not a schema.org date), and never
+  // from the event plugin's DOM -- it replaces its own cooked node, so nothing is readable
+  // there by the time we run.
+  const start = decode(wrap.dataset.start || "");
+  const end = decode(wrap.dataset.end || "");
+  if (start) data.startDate = start;
+  if (end) data.endDate = end;
+
+  facts.forEach(({ label, text }) => {
     if (!text) return;
     const key = label.toLowerCase();
-    if (info.schema === "Event") {
-      if (key === "when") data.startDate = text;
-      if (key === "where") data.location = { "@type": "Place", name: text };
+    if (info.schema === "Event" && key === "where") {
+      data.location = { "@type": "Place", name: text };
     }
-    if (info.schema === "Person" && key === "lived") data.description = `${text}. ${dek || ""}`.trim();
     if (info.schema === "Place" && key === "location") data.address = text;
   });
 
@@ -216,7 +225,6 @@ export function renderEntry(el, post, api) {
     }
 
     if (isFirst) {
-      document.body.classList.add("entry-entry", `entry-is-${type || "generic"}`);
       injectJsonLd(wrap, {
         type,
         title,
@@ -230,10 +238,26 @@ export function renderEntry(el, post, api) {
   decorateConnected(el);
 }
 
-// ── clear body state between routes ──
-export function resetEntryBodyClasses() {
+// ── body state, driven from the topic's tags ──
+//
+// This deliberately does NOT live in renderEntry. decorateCookedElement runs BEFORE
+// onPageChange, so a class set during render was being wiped by the reset a moment later.
+// Reading the entry type off the topic's `entry-*` tag makes it independent of decorator
+// ordering, and it works on every route the topic model is available on.
+export function applyEntryBodyClass(api) {
   const b = document.body;
   [...b.classList].forEach((c) => {
     if (c === "entry-entry" || c.startsWith("entry-is-")) b.classList.remove(c);
   });
+
+  let tags = [];
+  try {
+    tags = api.container.lookup("controller:topic")?.model?.tags || [];
+  } catch {
+    return;
+  }
+  const typeTag = tags.find((t) => typeof t === "string" && t.startsWith("entry-"));
+  if (!typeTag) return;
+
+  b.classList.add("entry-entry", `entry-is-${typeTag.replace(/^entry-/, "")}`);
 }

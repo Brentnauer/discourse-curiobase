@@ -24,12 +24,12 @@ import {
   buildGallery,
 } from "../lib/scoring";
 
-import { renderEntry, resetEntryBodyClasses } from "../lib/entries";
+import { renderEntry, applyEntryBodyClass } from "../lib/entries";
 
 export default apiInitializer("1.0", (api) => {
   api.onPageChange(() => {
     const b = document.body;
-    resetEntryBodyClasses();
+    applyEntryBodyClass(api);
     ["curio-wing", "vault-wing", "vault-entry", "curio-entry"].forEach((c) => b.classList.remove(c));
     document.getElementById("curio-wingnav")?.remove();
     const cat = currentCategory(api);

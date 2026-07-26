@@ -132,6 +132,7 @@ template. They are identified by the wrap and the `entry-*` tag, **never by cate
 
 ```
 [wrap=entry type="event" slug="rendlesham-forest-incident"
+            start="1980-12-26" end="1980-12-28"
             dek="One sentence a stranger could repeat back to you."]
 
 |  |  |
@@ -162,6 +163,11 @@ Prose. Reports what sources say; does not adjudicate.
 **The fact table is authored as real markdown on purpose.** It renders server-side as a real
 `<table>` that a crawler reads; the component swaps in a styled `<dl>`. If the JavaScript never
 loads, the facts are still there. The `Reviewed` row is pulled out and shown as a freshness stamp.
+
+`start` / `end` are **optional ISO dates, used only for the JSON-LD.** They are not read from
+the fact table (`26–28 December 1980` is not a schema.org date) and cannot be read from the
+`[event]` block — the plugin replaces its own cooked node before the component runs. Omit them
+and the JSON-LD simply carries no date, which is better than carrying a wrong one.
 
 **The needs list uses real `- [ ]` checklist syntax**, so the `checklist` plugin owns ticking. The
 component only adds the heading and the done/total count.
