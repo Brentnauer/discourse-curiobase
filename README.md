@@ -189,6 +189,34 @@ and the JSON-LD simply carries no date, which is better than carrying a wrong on
 **The needs list uses real `- [ ]` checklist syntax**, so the `checklist` plugin owns ticking. The
 component only adds the heading and the done/total count.
 
+#### The gate: when is something an entry, and when is it a section?
+
+**An entry must contain at least one fact that appears in no other entry. If it doesn't, it is a
+section with a heading.**
+
+This rule exists because the first cluster built here failed it completely. Rendlesham was split into
+six entries — the event, the forest, Charles Halt, the Halt memo, Penniston's binary claim and
+Majestic 12 — and a check across them found **zero facts unique to any of the four satellites**. The
+radiation readings appeared in three entries; the date discrepancy in two. Every one of the four was
+220–290 words entirely restated from the 900-word event entry. They were collapsed back the same day.
+
+The mistake was applying the **type taxonomy** — is it a person? a place? an object? — instead of the
+question that actually matters: *does anyone want this page, and does it hold anything of its own?*
+Type describes what a thing **is**. Entry-worthiness is about **demand and distinct content**. A
+person who only exists inside one event is a section of that event.
+
+**Splitting buys you less than it looks like it does**, because Discourse already generates a
+heading anchor for every `##` in a post:
+
+```
+/t/rendlesham-forest-incident/19627#p-126057-the-discrepancy-in-the-record-2
+```
+
+That is a real, indexable, deep-linkable URL. A section is already a destination. Splitting adds a
+sync burden and buys a URL you effectively already had.
+
+Types remain available — all eight — but the gate decides, not the type.
+
 #### ⚠ Entry-specific traps
 
 - **Needs must be a fixed block at the END of the post.** The checklist plugin finds boxes by
