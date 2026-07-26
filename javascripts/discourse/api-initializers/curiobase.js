@@ -25,6 +25,7 @@ import {
 } from "../lib/scoring";
 
 import { renderRecord, applyRecordBodyClass, buildEntryIndex } from "../lib/record";
+import { mountTagConcept, clearTagConcept } from "../lib/tagconcept";
 
 export default apiInitializer("1.0", (api) => {
   api.onPageChange(() => {
@@ -95,6 +96,25 @@ export default apiInitializer("1.0", (api) => {
     let tries = 10;
     const int = setInterval(() => { if (attempt(tries--)) clearInterval(int); }, 250);
     setTimeout(() => clearInterval(int), 3500);
+  });
+
+  // ── tag pages become concept pages ──
+  //
+  // Discourse maintains the derived list for free; this adds the identity it lacks.
+  // Runs in its own handler because the listing handler below deliberately bails out
+  // on tag routes.
+  api.onPageChange(async () => {
+    clearTagConcept();
+    const path = window.location.pathname;
+    if (!path.startsWith("/tag/") && !path.startsWith("/tags/")) return;
+    try {
+      await mountTagConcept(api, async (slug) => {
+        const works = await conceptWorks(slug);
+        return works.length ? buildGrid(works) : null;
+      });
+    } catch (e) {
+      console.warn("[curiobase] tag concept failed", e);
+    }
   });
 
   // ── listing pages: purpose-built indexes replace native lists ──

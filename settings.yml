@@ -191,3 +191,6 @@ label_entry_gap_one:
 label_entry_gap_many:
   type: string
   default: "%{count} members have flagged this entry as needing a source."
+label_tag_concept_more:
+  type: string
+  default: "Read the full entry →"
