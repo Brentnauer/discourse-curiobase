@@ -1,0 +1,1207 @@
+// ════════════════════════════════════════════════════
+// Curiobase / Vault — institutional-modern skin
+// The reading room upstairs from the Chronovisor.
+// ════════════════════════════════════════════════════
+$curio: #2aa79b;
+$vaultg: #c9a227;
+$ink: var(--primary, #e8e6e3);
+$dim: var(--primary-medium, #9aa0a6);
+
+body.curio-wing, body.vault-wing {
+  #topic-title h1 a {
+    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+}
+
+// ── concept masthead ──
+.curio-masthead {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  flex-wrap: wrap;
+  padding-bottom: 0.7em;
+  margin-bottom: 1em;
+  border-bottom: 2px solid $curio;
+
+  .cm-domain {
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 0.7em;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: $curio;
+    border: 1px solid $curio;
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+  .cm-gi-label {
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 0.65em;
+    letter-spacing: 0.22em;
+    color: $dim;
+    margin-left: auto;
+  }
+  .cm-related {
+    font-size: 0.8em;
+    color: $dim;
+    text-decoration: none;
+    border-bottom: 1px dotted $dim;
+    text-transform: capitalize;
+    &:hover { color: $curio; border-color: $curio; }
+  }
+}
+
+// ── gravity grid ──
+.curio-grid {
+  width: 100%;
+  height: auto;
+  margin: 0.5em 0 0.25em;
+  background: color-mix(in srgb, $curio 4%, transparent);
+  border: 1px solid color-mix(in srgb, $curio 30%, transparent);
+  border-radius: 4px;
+
+  .cg-field { fill: transparent; stroke: color-mix(in srgb, $curio 35%, transparent); }
+  .cg-gridline { stroke: color-mix(in srgb, $curio 12%, transparent); stroke-width: 1; }
+  .cg-axis {
+    fill: $dim;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-anchor: middle;
+  }
+  .cg-tether { stroke: $curio; stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.55; }
+  .cg-point circle { fill: $curio; stroke: color-mix(in srgb, $curio 40%, #000); stroke-width: 1.5; }
+  .cg-pt-label { fill: #06211e; font: bold 10px ui-monospace, monospace; text-anchor: middle; }
+  .cg-community { fill: transparent; stroke: $curio; stroke-width: 2; }
+}
+
+.curio-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em 1.4em;
+  margin: 0.4em 0 1em;
+  font-size: 0.8em;
+  color: $dim;
+  .cl-item b {
+    display: inline-block;
+    width: 1.5em; height: 1.5em;
+    line-height: 1.5em;
+    text-align: center;
+    background: $curio;
+    color: #06211e;
+    border-radius: 50%;
+    margin-right: 0.4em;
+    font-size: 0.85em;
+  }
+  .cl-item i { font-style: normal; font-size: 0.85em; letter-spacing: 0.06em; }
+}
+
+.curio-chronostrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em 1.2em;
+  align-items: center;
+  margin-top: 0.8em;
+  padding: 0.5em 0.8em;
+  border: 1px dashed color-mix(in srgb, $curio 40%, transparent);
+  border-radius: 4px;
+  font-size: 0.82em;
+  .cs-label {
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 0.75em;
+    letter-spacing: 0.18em;
+    color: $dim;
+  }
+  a { color: $ink; text-decoration: none; &:hover { color: $curio; } }
+}
+
+// ── work rows ──
+.d-wrap[data-wrap="curio-work"] {
+  border-left: 3px solid $curio;
+  padding-left: 1em;
+  margin: 0.4em 0 1em;
+
+  .curio-workhead {
+    display: flex;
+    align-items: baseline;
+    gap: 1em;
+    flex-wrap: wrap;
+    padding: 0.35em 0 0.5em;
+    border-bottom: 1px solid color-mix(in srgb, $curio 20%, transparent);
+    margin-bottom: 0.7em;
+
+    .cw-title {
+      font-family: Georgia, serif;
+      font-size: 1.15em;
+      font-weight: 700;
+      color: $ink;
+      text-decoration: none;
+      &:hover { color: $curio; }
+    }
+    .cw-tier {
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 0.62em;
+      letter-spacing: 0.18em;
+      border: 1px solid;
+      padding: 2px 8px;
+      border-radius: 2px;
+    }
+    .cw-score {
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 0.75em;
+      color: $dim;
+    }
+    .cw-community { color: $curio; }
+    .cw-awaiting { color: $dim; font-style: italic; }
+  }
+}
+
+// ── vault card ──
+.d-wrap[data-wrap="curio-card"] {
+  border: 1px solid color-mix(in srgb, $vaultg 35%, transparent);
+  border-radius: 6px;
+  padding: 1em 1.2em;
+  margin-bottom: 1.2em;
+  background: color-mix(in srgb, $vaultg 4%, transparent);
+
+  img {
+    float: right;
+    max-width: 180px;
+    margin: 0 0 0.8em 1.2em;
+    border-radius: 4px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  }
+  .cc-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7em 2em;
+    align-items: center;
+    margin-bottom: 0.6em;
+    .cc-cell {
+      .cc-label {
+        display: block;
+        font-family: ui-monospace, Consolas, monospace;
+        font-size: 0.6em;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: $vaultg;
+      }
+      .cc-value { font-size: 0.9em; color: $ink; }
+    }
+    .cc-ext {
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 0.72em;
+      letter-spacing: 0.1em;
+      color: $vaultg;
+      border: 1px solid color-mix(in srgb, $vaultg 50%, transparent);
+      padding: 2px 8px;
+      border-radius: 2px;
+      text-decoration: none;
+      &:hover { color: $ink; }
+    }
+  }
+  .cc-refs {
+    clear: both;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em 0.8em;
+    align-items: center;
+    margin-top: 0.8em;
+    padding-top: 0.7em;
+    border-top: 1px solid color-mix(in srgb, $vaultg 25%, transparent);
+    .cc-refs-label {
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 0.65em;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: $dim;
+    }
+    .cc-refchip {
+      font-size: 0.8em;
+      color: $curio;
+      border: 1px solid color-mix(in srgb, $curio 45%, transparent);
+      padding: 3px 10px;
+      border-radius: 999px;
+      text-decoration: none;
+      &:hover { background: color-mix(in srgb, $curio 12%, transparent); }
+    }
+  }
+}
+
+// ── challenge / response citations ──
+.d-wrap[data-wrap="curio-challenge"],
+.d-wrap[data-wrap="curio-response"] {
+  border: 1px solid color-mix(in srgb, $curio 40%, transparent);
+  border-left: 4px solid $curio;
+  border-radius: 4px;
+  padding: 0.7em 1em;
+  margin: 1em 0;
+
+  .curio-cite {
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 0.68em;
+    letter-spacing: 0.16em;
+    color: $curio;
+    margin-bottom: 0.5em;
+  }
+}
+.d-wrap[data-wrap="curio-response"] {
+  border-left-color: $vaultg;
+  .curio-cite { color: $vaultg; }
+}
+
+// ── concept atlas ──
+#curio-atlas {
+  margin: 0.75em 0 1.5em;
+
+  .ca-domain {
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 0.72em;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: $curio;
+    border-bottom: 1px solid color-mix(in srgb, $curio 35%, transparent);
+    padding-bottom: 0.3em;
+    margin: 1.2em 0 0.6em;
+  }
+  .ca-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 0.7em;
+  }
+  .ca-card {
+    display: block;
+    padding: 0.8em 1em;
+    border: 1px solid color-mix(in srgb, $curio 25%, transparent);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: border-color 0.15s;
+    &:hover { border-color: $curio; }
+    .ca-title {
+      display: block;
+      font-family: Georgia, serif;
+      font-weight: 700;
+      color: $ink;
+      margin-bottom: 0.25em;
+    }
+    .ca-meta { font-size: 0.75em; color: $dim; }
+  }
+  .ca-empty { font-size: 0.8em; color: $dim; font-style: italic; padding: 0.4em 0; }
+}
+
+@media (max-width: 700px) {
+  .d-wrap[data-wrap="curio-card"] img { max-width: 110px; margin-left: 0.8em; }
+  .curio-masthead .cm-gi-label { display: none; }
+}
+
+// ── score panels ──
+.csp-head {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.68em;
+  letter-spacing: 0.2em;
+  color: #2aa79b;
+  border-top: 2px solid #2aa79b;
+  padding-top: 0.6em;
+  margin: 1.4em 0 0.6em;
+}
+.csp-label {
+  margin: 0.7em 0 0.15em;
+  b {
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 0.72em;
+    letter-spacing: 0.14em;
+    color: var(--primary, #e8e6e3);
+    display: block;
+  }
+  span {
+    font-size: 0.78em;
+    color: var(--primary-medium, #9aa0a6);
+    display: block;
+  }
+}
+.csp-poll.poll, .poll.csp-poll {
+  margin: 0.2em 0 0.6em;
+  .poll-container { padding: 0.3em 0; }
+}
+
+// ── self-populating works gallery ──
+.curio-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 0.8em;
+  margin: 0.8em 0 1.2em;
+
+  .cgal-card {
+    position: relative;
+    display: flex;
+    gap: 0.8em;
+    padding: 0.7em;
+    border: 1px solid color-mix(in srgb, #2aa79b 25%, transparent);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: border-color 0.15s;
+    &:hover { border-color: #2aa79b; }
+
+    .cgal-num {
+      position: absolute;
+      top: -0.6em; left: -0.6em;
+      width: 1.6em; height: 1.6em;
+      line-height: 1.6em;
+      text-align: center;
+      background: #2aa79b;
+      color: #06211e;
+      border-radius: 50%;
+      font: bold 0.8em ui-monospace, monospace;
+    }
+    img, .cgal-noposter {
+      width: 74px; height: 110px;
+      object-fit: cover;
+      border-radius: 3px;
+      flex-shrink: 0;
+      background: color-mix(in srgb, #2aa79b 12%, transparent);
+    }
+    .cgal-body { display: flex; flex-direction: column; gap: 0.25em; min-width: 0; }
+    .cgal-title {
+      font-family: Georgia, serif;
+      font-weight: 700;
+      color: var(--primary, #e8e6e3);
+      i { font-style: normal; color: var(--primary-medium, #9aa0a6); font-weight: 400; }
+    }
+    .cgal-tier {
+      align-self: flex-start;
+      font: 0.6em ui-monospace, monospace;
+      letter-spacing: 0.16em;
+      border: 1px solid;
+      padding: 2px 7px;
+      border-radius: 2px;
+    }
+    .cgal-score {
+      font: 0.72em ui-monospace, monospace;
+      color: var(--primary-medium, #9aa0a6);
+      b { color: var(--primary, #e8e6e3); }
+    }
+    .cgal-comm { color: #2aa79b; }
+    .cgal-excerpt {
+      font-size: 0.76em;
+      color: var(--primary-medium, #9aa0a6);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+}
+.curio-noworks {
+  font-size: 0.85em;
+  font-style: italic;
+  color: var(--primary-medium, #9aa0a6);
+  padding: 0.8em 0;
+}
+
+// ── gravity relationship sections on vault items ──
+.d-wrap[data-wrap="curio-gravity"] {
+  border-left: 3px solid #2aa79b;
+  padding-left: 1em;
+  margin: 1.4em 0 0.5em;
+
+  .curio-gravhead {
+    display: flex;
+    align-items: baseline;
+    gap: 1em;
+    flex-wrap: wrap;
+    padding-bottom: 0.4em;
+    border-bottom: 1px solid color-mix(in srgb, #2aa79b 20%, transparent);
+    margin-bottom: 0.6em;
+
+    .cg-concept {
+      font-family: Georgia, serif;
+      font-size: 1.1em;
+      font-weight: 700;
+      color: var(--primary, #e8e6e3);
+      text-decoration: none;
+      &:hover { color: #2aa79b; }
+    }
+    .cw-tier {
+      font: 0.6em ui-monospace, monospace;
+      letter-spacing: 0.16em;
+      border: 1px solid;
+      padding: 2px 7px;
+      border-radius: 2px;
+    }
+    .cw-score { font: 0.72em ui-monospace, monospace; color: var(--primary-medium, #9aa0a6); }
+    .cw-community { color: #2aa79b; }
+    .cw-awaiting { font-style: italic; }
+  }
+}
+
+// ═══ v3: hero grid, ballots, compact polls ═══
+.curio-grid-holder { margin: 0.6em 0 1em; }
+.curio-grid {
+  .cg-axis {
+    fill: var(--primary-medium, #9aa0a6);
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.22em;
+  }
+  .cg-a-start { text-anchor: start; }
+  .cg-a-end { text-anchor: end; }
+  .cg-a-endv { text-anchor: end; }
+  .cg-poster-frame {
+    fill: transparent;
+    stroke: #2aa79b;
+    stroke-width: 1.5;
+    transition: stroke-width 0.15s;
+  }
+  .cg-work:hover .cg-poster-frame { stroke-width: 3; }
+  .cg-work:hover image { opacity: 0.92; }
+  .cg-badge { fill: #2aa79b; stroke: #06211e; stroke-width: 1.5; }
+  .cg-dot { fill: #2aa79b; stroke: #06211e; stroke-width: 1.5; }
+}
+.curio-grid-hint {
+  font-size: 0.74em;
+  color: var(--primary-medium, #9aa0a6);
+  font-family: ui-monospace, Consolas, monospace;
+  letter-spacing: 0.04em;
+  margin-top: 0.35em;
+  text-align: center;
+}
+
+// ── ballots ──
+.curio-ballot {
+  border: 1px solid color-mix(in srgb, #2aa79b 35%, transparent);
+  border-radius: 6px;
+  background: color-mix(in srgb, #2aa79b 5%, transparent);
+  padding: 0.7em 1em 0.5em;
+  margin: 1em 0;
+
+  .csp-head { border-top: 0; padding-top: 0; margin: 0 0 0.5em; }
+  .cb-item { margin-bottom: 0.5em; }
+}
+.cb-calib { border-color: color-mix(in srgb, #c9a227 35%, transparent); background: color-mix(in srgb, #c9a227 4%, transparent);
+  .csp-head { color: #c9a227; } }
+
+// ── compact the native poll widgets hard ──
+.curio-ballot .poll, .curio-ballot .poll-outer {
+  margin: 0 0 0.4em !important;
+  border: 0 !important;
+  background: transparent !important;
+
+  .poll-container { padding: 0 !important; }
+  .poll-title { display: none; }
+  // pre-vote number poll: horizontal compact options
+  .poll-buttons, .poll-info_instructions { margin: 0.15em 0 0; }
+  li[data-poll-option-id] button, .poll-options li {
+    padding: 0.15em 0.55em !important;
+    font-size: 0.85em;
+  }
+  .poll-info {
+    padding: 0 !important;
+    .info-number { font-size: 1.15em !important; }
+    .info-label { font-size: 0.65em !important; }
+  }
+  .results .option p { font-size: 0.8em; margin: 0.15em 0; }
+  .poll-buttons-dropdown, .poll-show-results { transform: scale(0.9); }
+}
+.csp-label {
+  b { font-size: 0.7em; }
+  span { font-size: 0.74em; }
+}
+
+// gallery: poster-forward
+.curio-gallery .cgal-card {
+  img, .cgal-noposter { width: 88px; height: 130px; }
+}
+
+// ═══ listing indexes replace native lists ═══
+body.curio-index-active {
+  #list-area .topic-list,
+  #list-area .topic-list-container,
+  #list-area .category-list,
+  .category-boxes,
+  #list-area .footer-message,
+  #list-area .topic-list-bottom { display: none !important; }
+}
+
+.ca-cta {
+  display: inline-block;
+  margin-top: 1.4em;
+  padding: 0.6em 1.2em;
+  border: 1px solid #2aa79b;
+  border-radius: 999px;
+  color: #2aa79b;
+  font-weight: 600;
+  text-decoration: none;
+  &:hover { background: color-mix(in srgb, #2aa79b 12%, transparent); }
+}
+
+// vault chips + poster wall
+#vault-index { margin: 0.75em 0 1.5em; }
+.vt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-bottom: 1em;
+
+  .vt-chip {
+    padding: 0.4em 1em;
+    border: 1px solid color-mix(in srgb, #c9a227 45%, transparent);
+    border-radius: 999px;
+    color: var(--primary, #e8e6e3);
+    text-decoration: none;
+    font-size: 0.9em;
+    b { color: #c9a227; margin-left: 0.3em; }
+    &:hover { border-color: #c9a227; }
+  }
+  .vt-chip-dim { opacity: 0.65; border-style: dashed; }
+}
+.vt-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 1em;
+
+  .vt-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35em;
+    text-decoration: none;
+
+    img, .vt-noposter {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid color-mix(in srgb, #c9a227 30%, transparent);
+      transition: transform 0.15s, border-color 0.15s;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    }
+    .vt-noposter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: color-mix(in srgb, #c9a227 10%, transparent);
+      b { font: bold 2.4em Georgia, serif; color: #c9a227; }
+    }
+    &:hover img, &:hover .vt-noposter { transform: translateY(-3px); border-color: #c9a227; }
+    .vt-title {
+      font-family: Georgia, serif;
+      font-weight: 700;
+      font-size: 0.86em;
+      color: var(--primary, #e8e6e3);
+      line-height: 1.25;
+    }
+    .vt-tags {
+      display: flex; gap: 0.5em; flex-wrap: wrap;
+      i { font-style: normal; font-size: 0.7em; color: #2aa79b; text-transform: capitalize; }
+    }
+  }
+}
+
+.cgal-chips { display: flex; gap: 0.5em; }
+.cgal-med {
+  font: 0.6em ui-monospace, monospace;
+  letter-spacing: 0.16em;
+  border: 1px solid color-mix(in srgb, #c9a227 55%, transparent);
+  color: #c9a227;
+  padding: 2px 7px;
+  border-radius: 2px;
+}
+
+// ═══ relationship-post era ═══
+.cgal-card {
+  flex-direction: column;
+  .cgal-main { display: flex; gap: 0.8em; text-decoration: none; }
+  .cgal-more {
+    margin-top: 0.5em;
+    border-top: 1px solid color-mix(in srgb, #2aa79b 18%, transparent);
+    padding-top: 0.4em;
+    summary {
+      font: 0.72em ui-monospace, monospace;
+      letter-spacing: 0.08em;
+      color: #2aa79b;
+      cursor: pointer;
+    }
+    .cgal-assess {
+      font-size: 0.84em;
+      line-height: 1.55;
+      color: var(--primary, #e8e6e3);
+      margin: 0.5em 0;
+      p { margin: 0 0 0.6em; }
+    }
+    .cgal-vote {
+      display: inline-block;
+      font-size: 0.78em;
+      color: #06211e;
+      background: #2aa79b;
+      padding: 0.35em 0.9em;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      &:hover { filter: brightness(1.1); }
+    }
+  }
+}
+.cc-scored {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em 0.8em;
+  align-items: center;
+  margin-top: 0.7em;
+  padding-top: 0.6em;
+  border-top: 1px solid color-mix(in srgb, #c9a227 25%, transparent);
+}
+.cg-def {
+  font-size: 0.82em;
+  font-style: italic;
+  color: var(--primary-medium, #9aa0a6);
+  margin: -0.2em 0 0.6em;
+}
+
+// ═══ navigation sanity pass ═══
+.vt-chip-active { border-color: #c9a227 !important; background: color-mix(in srgb, #c9a227 12%, transparent); }
+.vt-chip-home { border-style: dashed; }
+
+// D. calibration ballot: two-column, compressed
+.cb-calib {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1.6em;
+  .csp-head { grid-column: 1 / -1; }
+  @media (max-width: 700px) { grid-template-columns: 1fr; }
+}
+.curio-ballot .poll {
+  .poll-info { min-width: 0 !important;
+    .info-number { font-size: 1em !important; }
+  }
+  button.btn { padding: 0.25em 0.7em; font-size: 0.8em; }
+}
+
+// E. stray giant thumbnails in suggested/related lists inside the wings
+body.vault-wing, body.curio-wing {
+  .more-topics__lists img:not(.emoji):not(.avatar),
+  .suggested-topics img:not(.emoji):not(.avatar) {
+    max-width: 60px !important;
+    max-height: 90px !important;
+    object-fit: cover;
+  }
+}
+
+.vt-wall .vt-tile.vt-wide {
+  grid-column: span 2;
+  img, .vt-noposter { aspect-ratio: 16 / 9; }
+}
+@media (max-width: 500px) { .vt-wall .vt-tile.vt-wide { grid-column: span 1; } }
+
+// ═══ the gravity glyph — one visual word, everywhere ═══
+.gravity-glyph { display: block; flex-shrink: 0; }
+
+.gp-zone {
+  clear: both;
+  margin-top: 0.8em;
+  padding-top: 0.6em;
+  border-top: 1px solid color-mix(in srgb, #c9a227 25%, transparent);
+  .gp-label {
+    font: 0.6em ui-monospace, monospace;
+    letter-spacing: 0.22em;
+    color: var(--primary-medium, #9aa0a6);
+    margin-bottom: 0.45em;
+  }
+}
+.gravity-plaques {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6em;
+}
+.gravity-plaque {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.45em 0.8em 0.45em 0.5em;
+  border: 1px solid color-mix(in srgb, #2aa79b 35%, transparent);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: border-color 0.15s, background 0.15s;
+  &:hover { border-color: #2aa79b; background: color-mix(in srgb, #2aa79b 8%, transparent); }
+  .gp-body { display: flex; flex-direction: column; gap: 1px; }
+  .gp-name {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 0.92em;
+    color: var(--primary, #e8e6e3);
+  }
+  .gp-meta {
+    font: 0.68em ui-monospace, monospace;
+    color: var(--primary-medium, #9aa0a6);
+    i { font-style: normal; letter-spacing: 0.1em; }
+  }
+  .gp-hint { font: 0.62em ui-monospace, monospace; color: #2aa79b; letter-spacing: 0.06em; }
+}
+.cg-glyphholder { margin-right: 0.2em; }
+.curio-gravhead { align-items: center; }
+
+.cgal-gravity {
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
+  .cgal-gravnums {
+    display: flex; flex-direction: column;
+    b { font: 0.78em ui-monospace, monospace; color: var(--primary, #e8e6e3); }
+    i { font: 0.68em ui-monospace, monospace; font-style: normal; color: #2aa79b; }
+  }
+}
+
+// ═══ app-mode: heroes, chrome suppression, segmented ballots, wing nav ═══
+
+#curio-wingnav {
+  display: flex;
+  gap: 1.6em;
+  align-items: center;
+  padding: 0.55em 0.2em;
+  margin-bottom: 0.6em;
+  border-bottom: 1px solid color-mix(in srgb, #2aa79b 22%, transparent);
+
+  .cwn-link {
+    font: 600 0.8em ui-monospace, monospace;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--primary-medium, #9aa0a6);
+    text-decoration: none;
+    padding-bottom: 0.35em;
+    border-bottom: 2px solid transparent;
+    &:hover { color: var(--primary, #e8e6e3); }
+  }
+  .cwn-active { color: #2aa79b; border-bottom-color: #2aa79b; }
+}
+
+// entry pages: the forum recedes
+body.vault-entry, body.curio-entry {
+  #topic-title { display: none; }
+  .topic-post:has(.d-wrap[data-wrap="curio-card"]),
+  .topic-post:has(.d-wrap[data-wrap="curio-gravity"]),
+  .topic-post:has(.d-wrap[data-wrap="curio-concept"]) {
+    .topic-avatar { display: none; }
+    .topic-map { display: none; }
+    article { border-top: 0; }
+    .topic-meta-data { display: none; }
+    .topic-body { width: 100%; max-width: 100%; float: none; }
+  }
+}
+
+#curio-discussion-divider {
+  margin: 2.2em 0 1.2em;
+  padding-bottom: 0.5em;
+  border-bottom: 2px solid color-mix(in srgb, #2aa79b 35%, transparent);
+  font: 600 0.78em ui-monospace, monospace;
+  letter-spacing: 0.24em;
+  color: #2aa79b;
+}
+.curio-sectlabel {
+  margin: 2em 0 0.9em;
+  padding-bottom: 0.5em;
+  border-bottom: 2px solid color-mix(in srgb, #2aa79b 35%, transparent);
+  font: 600 0.78em ui-monospace, monospace;
+  letter-spacing: 0.24em;
+  color: #2aa79b;
+}
+
+// ── the work hero ──
+.d-wrap[data-wrap="curio-card"].vault-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 1.5em;
+  align-items: start;
+  padding: 1.6em;
+  border: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0b1013;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--vh-bg);
+    background-size: cover;
+    background-position: center 25%;
+    filter: blur(34px) brightness(0.32) saturate(1.1);
+    z-index: -1;
+    transform: scale(1.2);
+  }
+
+  img {
+    float: none !important;
+    width: 210px !important;
+    max-width: 210px !important;
+    margin: 0 !important;
+    grid-column: 1;
+    grid-row: 1;
+    border-radius: 8px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  }
+  .curio-cardhead { grid-column: 2; grid-row: 1; }
+  .vh-title {
+    font: 700 1.85em/1.15 Georgia, serif;
+    color: #fff;
+    margin: 0 0 0.35em;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  }
+  .cc-meta { margin-bottom: 0.9em; }
+  .cc-cell .cc-value { color: #eef2f5; }
+  .gp-zone { border-top-color: rgba(255, 255, 255, 0.14); }
+  @media (max-width: 700px) {
+    grid-template-columns: 110px 1fr;
+    img { width: 110px !important; }
+    .vh-title { font-size: 1.3em; }
+  }
+}
+
+// ── the concept hero ──
+.d-wrap[data-wrap="curio-concept"].curio-hero {
+  .curio-masthead {
+    display: block;
+    border-bottom: 0;
+    padding-bottom: 0;
+    margin-bottom: 0.8em;
+    .ch-title {
+      font: 700 2em/1.1 Georgia, serif;
+      color: var(--primary, #fff);
+      margin: 0 0 0.3em;
+      display: block;
+    }
+    .cm-domain { margin-right: 0.8em; }
+  }
+}
+
+// ── segmented rating bars (polls in disguise) ──
+.curio-ballot .poll {
+  ul.poll-options, .poll-options {
+    display: flex !important;
+    gap: 7px;
+    margin: 6px 0 2px;
+    padding: 0;
+    li {
+      flex: 1;
+      margin: 0 !important;
+      padding: 0 !important;
+      list-style: none;
+      button {
+        width: 100%;
+        padding: 0.6em 0 !important;
+        border: 1.5px solid color-mix(in srgb, #2aa79b 45%, transparent) !important;
+        border-radius: 7px;
+        background: transparent;
+        color: var(--primary, #e8e6e3);
+        font: 700 1em ui-monospace, monospace;
+        cursor: pointer;
+        transition: background 0.12s, border-color 0.12s;
+        &:hover { background: color-mix(in srgb, #2aa79b 18%, transparent); border-color: #2aa79b !important; }
+      }
+      .d-icon, svg { display: none !important; }
+    }
+  }
+  .poll-info { text-align: right; }
+}
+.cb-calib .curio-ballot, .cb-calib .poll {
+  ul.poll-options li button {
+    border-color: color-mix(in srgb, #c9a227 45%, transparent) !important;
+    &:hover { background: color-mix(in srgb, #c9a227 15%, transparent); border-color: #c9a227 !important; }
+  }
+}
+
+// ═══ corrections from live DOM inspection ═══
+// hero grid: the real children are .curio-cardhead + .lightbox-wrapper (+ empty p shells)
+.d-wrap[data-wrap="curio-card"].vault-hero {
+  > p:empty, > p:blank { display: none; }
+  > p { margin: 0; }
+  > .lightbox-wrapper, > p:has(img) {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+    .meta, .informations, .filename { display: none !important; }
+    img { width: 210px !important; height: auto !important; }
+  }
+  > .curio-cardhead { grid-column: 2; grid-row: 1; }
+}
+
+// segmented rating bars — real selectors: .poll .poll-container ul.options > li > button
+.curio-ballot .poll {
+  border: 0 !important;
+  margin: 0 !important;
+  .poll-container { padding: 0 !important; }
+  ul.options {
+    display: flex !important;
+    gap: 7px;
+    margin: 6px 0 2px !important;
+    padding: 0 !important;
+    li {
+      flex: 1;
+      margin: 0 !important;
+      padding: 0 !important;
+      list-style: none;
+      border: 0 !important;
+      button {
+        width: 100%;
+        padding: 0.55em 0 !important;
+        border: 1.5px solid color-mix(in srgb, #2aa79b 45%, transparent);
+        border-radius: 7px;
+        background: transparent;
+        cursor: pointer;
+        transition: background 0.12s, border-color 0.12s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        svg, .d-icon { display: none !important; }
+        .option-text {
+          font: 700 1.05em ui-monospace, monospace;
+          color: var(--primary, #e8e6e3);
+        }
+        &:hover { background: color-mix(in srgb, #2aa79b 18%, transparent); border-color: #2aa79b; }
+      }
+      &.chosen button, button[aria-checked="true"] {
+        background: #2aa79b;
+        border-color: #2aa79b;
+        .option-text { color: #06211e; }
+      }
+    }
+  }
+  .poll-info {
+    text-align: right;
+    padding: 0 !important;
+    .poll-info_counts-count .info-number { font-size: 1.1em !important; color: #2aa79b; }
+    .info-label { font-size: 0.62em !important; letter-spacing: 0.1em; text-transform: uppercase; }
+  }
+  .poll-buttons { margin-top: 2px; opacity: 0.5; transform: scale(0.85); transform-origin: right; }
+}
+.cb-calib .poll ul.options li {
+  button { border-color: color-mix(in srgb, #c9a227 45%, transparent);
+    &:hover { background: color-mix(in srgb, #c9a227 15%, transparent); border-color: #c9a227; } }
+  &.chosen button, button[aria-checked="true"] { background: #c9a227; border-color: #c9a227;
+    .option-text { color: #1a1408; } }
+}
+.d-wrap[data-wrap="curio-concept"].curio-hero .curio-masthead .cm-related { margin-right: 1.1em; }
+
+// ═══ v4: Position Rows ═══
+#curio-positions { margin: 1.4em 0 0; }
+
+.position-row {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  grid-template-areas: "visual main scores" "ballot ballot ballot" "expand expand expand" "actions actions actions";
+  gap: 10px 14px;
+  align-items: center;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border: 1px solid color-mix(in srgb, #2aa79b 30%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, #2aa79b 4%, transparent);
+  transition: border-color 0.15s;
+
+  &:hover { border-color: color-mix(in srgb, #2aa79b 55%, transparent); }
+  &.pr-focus { border-color: #2aa79b; box-shadow: 0 0 0 3px color-mix(in srgb, #2aa79b 18%, transparent); }
+
+  .pr-visual { grid-area: visual; display: block; }
+  .pr-main {
+    grid-area: main;
+    display: flex; align-items: baseline; gap: 0.7em; flex-wrap: wrap; min-width: 0;
+    .pr-title {
+      font-family: Georgia, serif; font-weight: 700; font-size: 1.12em;
+      color: var(--primary, #e8e6e3); text-decoration: none;
+      i { font-style: normal; font-size: 0.72em; color: var(--primary-medium, #9aa0a6); font-family: ui-monospace, monospace; }
+      &:hover { color: #2aa79b; }
+    }
+    .pr-tier {
+      font: 0.6em ui-monospace, monospace; letter-spacing: 0.16em;
+      border: 1px solid; padding: 2px 7px; border-radius: 3px;
+    }
+  }
+  .pr-scores {
+    grid-area: scores; text-align: right; display: flex; flex-direction: column; gap: 1px;
+    font-family: ui-monospace, Consolas, monospace;
+    .pr-ed { font-size: 0.74em; color: var(--primary-medium, #9aa0a6); b { color: var(--primary, #e8e6e3); font-size: 1.15em; } }
+    .pr-com { font-size: 0.7em; color: #2aa79b; }
+    .pr-none { font-size: 0.7em; color: var(--primary-medium, #9aa0a6); font-style: italic; }
+    .pr-you { font-size: 0.68em; color: #7fb8b0; }
+    .pr-unrated { font-size: 0.72em; color: var(--primary-medium, #9aa0a6); font-style: italic; }
+  }
+  .pr-ballot {
+    grid-area: ballot;
+    display: flex; gap: 22px; flex-wrap: wrap;
+    padding-top: 4px;
+    border-top: 1px solid color-mix(in srgb, #2aa79b 15%, transparent);
+  }
+  .pr-axis { min-width: 240px; flex: 1; }
+  .pr-axis-label {
+    font-family: ui-monospace, monospace; font-size: 0.68em; line-height: 1.5;
+    color: var(--primary-medium, #9aa0a6); margin-bottom: 3px;
+    b { color: var(--primary, #e8e6e3); letter-spacing: 0.14em; margin-right: 0.5em; }
+  }
+  .pr-expand {
+    grid-area: expand;
+    .pr-commentary {
+      font-size: 0.92em; line-height: 1.6; color: var(--primary, #e8e6e3);
+      padding-top: 4px;
+      p { margin: 0 0 0.6em; }
+      p:last-child { margin-bottom: 0; }
+    }
+  }
+  .pr-actions {
+    grid-area: actions; display: flex; gap: 10px; align-items: center;
+    .pr-btn {
+      font: 0.72em ui-monospace, monospace; letter-spacing: 0.08em;
+      background: none; border: 1px solid color-mix(in srgb, #2aa79b 35%, transparent);
+      color: #2aa79b; padding: 4px 12px; border-radius: 999px; cursor: pointer; text-decoration: none;
+      &:hover { background: color-mix(in srgb, #2aa79b 12%, transparent); border-color: #2aa79b; }
+    }
+    .pr-link { color: var(--primary-medium, #9aa0a6); border-color: color-mix(in srgb, #9aa0a6 30%, transparent); }
+  }
+
+  @media (max-width: 700px) {
+    grid-template-columns: 36px 1fr;
+    grid-template-areas: "visual main" "scores scores" "ballot ballot" "expand expand" "actions actions";
+    .pr-scores { text-align: left; }
+    .pr-axis { min-width: 100%; }
+  }
+}
+
+// hide the raw edge posts once their content lives in rows
+.curio-edge-hidden { display: none !important; }
+
+// v4 kill-criterion: no grid below 700px (S5) — shelf list carries it
+@media (max-width: 700px) { .curio-grid-holder { display: none; } }
+
+
+// ── v4 fix: ballot columns own their polls; poll chrome tamed inside rows ──
+.position-row {
+  .pr-ballot { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 22px; align-items: start; }
+  @media (max-width: 700px) { .pr-ballot { grid-template-columns: 1fr; } }
+  .pr-axis { min-width: 0; width: 100%; }
+  .pr-axis .poll-outer, .pr-axis .poll { width: 100%; margin: 0 !important; border: 0 !important; background: transparent !important; }
+  .pr-axis .poll-container { padding: 0 !important; }
+  .pr-axis ul.options {
+    display: flex !important; gap: 6px; margin: 4px 0 0 !important; padding: 0 !important;
+    li { flex: 1; margin: 0 !important; list-style: none;
+      button {
+        width: 100%; padding: 0.5em 0 !important; border: 1.5px solid color-mix(in srgb, #2aa79b 45%, transparent);
+        border-radius: 6px; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        svg, .d-icon { display: none !important; }
+        .option-text { font: 700 1em ui-monospace, monospace; color: var(--primary, #e8e6e3); }
+        &:hover { background: color-mix(in srgb, #2aa79b 20%, transparent); border-color: #2aa79b; }
+      }
+      &.chosen button { background: #2aa79b; border-color: #2aa79b; .option-text { color: #06211e; } }
+    }
+  }
+  // post-vote state: results + undo, compact and inline
+  .pr-axis .poll-info { padding: 0 !important; text-align: left;
+    .poll-info_counts { display: flex; gap: 6px; align-items: baseline; }
+    .info-number { font-size: 1em !important; color: #2aa79b; }
+    .info-label { font-size: 0.62em !important; letter-spacing: 0.1em; }
+  }
+  .pr-axis .poll-container p, .pr-axis .results { font-size: 0.82em; margin: 2px 0 0; }
+  .pr-axis .poll-buttons { margin-top: 4px; transform: scale(0.82); transform-origin: left; opacity: 0.75; }
+  .pr-axis .poll-buttons .btn { padding: 0.2em 0.6em; }
+}
+
+// declarative: once the dossier has assembled, raw edge posts stay hidden
+// through any Discourse re-render (class-based hiding was being dropped)
+
+
+
+// ── edge post = the ballot panel (commentary lives in the row above) ──
+body.curio-dossier-ready .topic-post.curio-edge-post {
+  .d-wrap[data-wrap="curio-gravity"] { display: none; }
+  .topic-avatar, .topic-meta-data, .post-menu-area, .topic-map { display: none; }
+  .topic-body { width: 100%; max-width: 100%; float: none; padding: 0; }
+  article { border: 0; padding: 0; }
+  .curio-ballot { margin-top: 0; }
+  &.pr-flash .curio-ballot { box-shadow: 0 0 0 3px color-mix(in srgb, #2aa79b 45%, transparent); }
+}
+.position-row .pr-scorebtn { background: color-mix(in srgb, #2aa79b 16%, transparent); font-weight: 600; }
+
+
+// edge post: strip everything except its ballot; the row above carries meaning
+body.curio-dossier-ready .topic-post.curio-edge-post {
+  .curio-gravhead, .cg-def, .cooked > p, .cooked > .d-wrap[data-wrap="curio-gravity"] { display: none !important; }
+  .cooked > .curio-ballot { display: block; }
+  margin-top: -8px;
+}
+body.curio-dossier-ready .topic-post.curio-edge-post .curio-ballot .csp-head::before {
+  content: "↑ ";
+  opacity: 0.6;
+}
+
+
+// commentary duplicate: row carries it, edge post hides its prose entirely
+body.vault-entry .topic-post.curio-edge-post.pr-flash .curio-ballot {
+  box-shadow: 0 0 0 3px color-mix(in srgb, #2aa79b 45%, transparent);
+  transition: box-shadow 0.3s;
+}
+
+
+// ── edge post reduced to its ballot (declarative: no JS timing dependency) ──
+body.vault-entry .post-stream .topic-post:has(.d-wrap[data-wrap="curio-gravity"]) {
+  .cooked > p, .cooked > .cooked-selection-barrier { display: none !important; }
+  .d-wrap[data-wrap="curio-gravity"] > *:not(.curio-ballot) { display: none !important; }
+  .d-wrap[data-wrap="curio-gravity"] { border: 0 !important; padding: 0 !important; margin: 0 !important; }
+  .topic-avatar, .topic-meta-data, .post-menu-area, .topic-map, .post-controls,
+  .small-action, .embedded-posts { display: none !important; }
+  article { border: 0 !important; padding: 0 !important; background: transparent !important; }
+  .topic-body { width: 100% !important; max-width: 100% !important; float: none !important; padding: 0 !important; }
+  margin-top: -14px;
+}
+body.vault-entry .post-stream .topic-post.pr-flash:has(.d-wrap[data-wrap="curio-gravity"]) .curio-ballot {
+  box-shadow: 0 0 0 3px color-mix(in srgb, #2aa79b 45%, transparent);
+}
+
+
+// grid: keep poster markers fully inside the plot area
+.curio-grid .cg-work { overflow: visible; }
+.curio-grid-holder { padding: 0 4px; }
+
+// hub concept cards: give them the works count + constellation slot
+#curio-atlas .ca-card { position: relative; }
+#curio-atlas .ca-meta { display: flex; gap: 0.8em; align-items: center; }
+
+
+// gallery cards: even heights, breathing room, scannable score line
+.curio-gallery { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.curio-gallery .cgal-card {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: color-mix(in srgb, #2aa79b 3%, transparent);
+  .cgal-main { gap: 14px; }
+  img, .cgal-noposter { width: 76px; height: 112px; border-radius: 5px; }
+  .cgal-title { font-size: 1.02em; line-height: 1.25; }
+  .cgal-gravity { margin-top: 4px; }
+  .cgal-gravnums i { font-size: 0.74em; }
+  .cgal-more summary { padding: 2px 0; }
+}
+
+
+// the concept's definition, shown as context inside a pairing row (never a verdict)
+.position-row .pr-dek {
+  font-size: 0.9em;
+  line-height: 1.55;
+  color: var(--primary-medium, #9aa0a6);
+  font-style: italic;
+  padding: 2px 0 4px;
+}
+.curio-gallery .cgal-card .cgal-vote { margin-top: 8px; align-self: flex-start; }
+
+// fiction / nonfiction sections on a concept shelf
+.curio-sublabel {
+  font: 600 0.68em ui-monospace, monospace;
+  letter-spacing: 0.2em;
+  color: var(--primary-medium, #9aa0a6);
+  margin: 1.4em 0 0.5em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid color-mix(in srgb, #2aa79b 20%, transparent);
+}
+.curio-sublabel.cs-nonfiction { color: #c9a227; border-bottom-color: color-mix(in srgb, #c9a227 25%, transparent); }
+.curio-grid .cg-nonfic .cg-poster-frame { stroke: #c9a227; stroke-dasharray: 4 3; }
+.curio-grid .cg-nonfic .cg-badge { fill: #c9a227; }
+.csp-head b { color: var(--primary, #e8e6e3); font-weight: 700; letter-spacing: 0.06em; }
+.csp-head .csp-x { opacity: 0.6; margin: 0 0.15em; }
+#curio-atlas .ca-meta.ca-empty-meta { font-style: italic; opacity: 0.75; }

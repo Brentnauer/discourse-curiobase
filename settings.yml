@@ -1,0 +1,153 @@
+curiobase_id:
+  type: integer
+  default: 106
+nominations_id:
+  type: integer
+  default: 111
+vault_id:
+  type: integer
+  default: 112
+chronovisor_id:
+  type: integer
+  default: 85
+min_voters:
+  type: integer
+  default: 1
+scale_max:
+  type: integer
+  default: 5
+label_x_left:
+  type: string
+  default: "SET DRESSING"
+label_x_right:
+  type: string
+  default: "LOAD-BEARING"
+label_y_bottom:
+  type: string
+  default: "TIDIED"
+label_y_top:
+  type: string
+  default: "UNFLINCHING"
+label_grid_hint:
+  type: string
+  default: "Each work sits where the community has scored it — centrality across, nerve up. Click a poster to open the work."
+label_awaiting:
+  type: string
+  default: "not yet scored — be first"
+label_editorial:
+  type: string
+  default: "Editorial"
+label_community:
+  type: string
+  default: "Community"
+label_referenced:
+  type: string
+  default: "Referenced by"
+label_chronostrip:
+  type: string
+  default: "From the Chronovisor"
+label_challenge:
+  type: string
+  default: "CHALLENGE FILED"
+label_response:
+  type: string
+  default: "EDITORIAL RESPONSE"
+label_gravity:
+  type: string
+  default: "GRAVITY INDEX"
+label_scorepanel_work:
+  type: string
+  default: "SCORE THIS PAIRING"
+label_scorepanel_vault:
+  type: string
+  default: "RATE THIS WORK"
+label_noworks:
+  type: string
+  default: "No works referenced yet — tag a Vault entry with this concept and give it a gravity block."
+poll_labels:
+  type: string
+  default: "axis_x::DECORATION → OBSESSION::1 = the concept is set dressing · 5 = the work cannot exist without it|axis_y::CONTAINED → UNRESOLVED::1 = tidied into a neat ending · 5 = pursued past the point of comfort|accessibility::ACCESSIBILITY::1 = anyone can start here · 5 = demands homework|register::EMOTIONAL REGISTER::1 = cerebral · 5 = visceral|strangeness::STRANGENESS::1 = grounded · 5 = fully outside consensus reality|footprint::CULTURAL FOOTPRINT::1 = obscure · 5 = household name"
+tier_colors:
+  type: string
+  default: "Essential:#2aa79b|Significant:#7fb8b0|Notable:#5a7a76"
+screening_id:
+  type: integer
+  default: 12
+label_nominate_cta:
+  type: string
+  default: "Nominate a work or concept →"
+label_assessment:
+  type: string
+  default: "why this work engages the idea"
+label_vote_cta:
+  type: string
+  default: "open the work & score it →"
+label_vote_hint:
+  type: string
+  default: "tap to score"
+label_discussion:
+  type: string
+  default: "DISCUSSION"
+label_theconcept:
+  type: string
+  default: "THE CONCEPT"
+label_positions:
+  type: string
+  default: "POSITIONS"
+label_axis_x_short:
+  type: string
+  default: "CENTRALITY"
+label_axis_y_short:
+  type: string
+  default: "NERVE"
+label_axis_x_hint:
+  type: string
+  default: "is the idea load-bearing? 1 = set dressing · 5 = the work cannot exist without it"
+label_axis_y_hint:
+  type: string
+  default: "how far does it follow the idea? 1 = tidied into a neat ending · 5 = pursued past the point of comfort"
+label_unrated:
+  type: string
+  default: "unrated by Editorial"
+label_challenge_btn:
+  type: string
+  default: "challenge this score"
+label_permalink:
+  type: string
+  default: "permalink"
+label_voter:
+  type: string
+  default: "voter"
+label_voters:
+  type: string
+  default: "voters"
+label_yourscore:
+  type: string
+  default: "your score"
+label_scorebtn:
+  type: string
+  default: "score this pairing ↓"
+label_fiction:
+  type: string
+  default: "FICTION"
+label_nonfiction:
+  type: string
+  default: "NONFICTION · documentary, explainer, investigation"
+label_score_prefix:
+  type: string
+  default: "SCORE THIS WORK AGAINST"
+label_this_work:
+  type: string
+  default: "this work"
+label_counting:
+  type: string
+  default: "…"
+label_work:
+  type: string
+  default: "work"
+label_works:
+  type: string
+  default: "works"
+label_noworks_short:
+  type: string
+  default: "no works yet — add one"
