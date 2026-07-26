@@ -215,26 +215,6 @@ body.curio-wing, body.vault-wing {
 }
 
 // ── challenge / response citations ──
-.d-wrap[data-wrap="curio-challenge"],
-.d-wrap[data-wrap="curio-response"] {
-  border: 1px solid color-mix(in srgb, $curio 40%, transparent);
-  border-left: 4px solid $curio;
-  border-radius: 4px;
-  padding: 0.7em 1em;
-  margin: 1em 0;
-
-  .curio-cite {
-    font-family: ui-monospace, Consolas, monospace;
-    font-size: 0.68em;
-    letter-spacing: 0.16em;
-    color: $curio;
-    margin-bottom: 0.5em;
-  }
-}
-.d-wrap[data-wrap="curio-response"] {
-  border-left-color: $vaultg;
-  .curio-cite { color: $vaultg; }
-}
 
 // ── concept atlas ──
 #curio-atlas {
